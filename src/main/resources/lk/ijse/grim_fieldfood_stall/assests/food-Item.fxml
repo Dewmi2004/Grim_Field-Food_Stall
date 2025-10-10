@@ -104,7 +104,7 @@
             </HBox>
 
             <!-- Food Table -->
-            <TableView fx:id="tblFood" opacity="0.8" prefHeight="300.0" prefWidth="820.0" style="-fx-background-color: #D2691E; -fx-border-width: 1; -fx-selection-bar: #ff4500; -fx-selection-bar-non-focused: #ff4500; -fx-background-radius: 20; -fx-border-color: #ff4500;" VBox.vgrow="ALWAYS">
+            <TableView fx:id="tblFood" onMouseClicked="#clickOnAction" opacity="0.8" prefHeight="300.0" prefWidth="820.0" style="-fx-background-color: #D2691E; -fx-border-width: 1; -fx-selection-bar: #ff4500; -fx-selection-bar-non-focused: #ff4500; -fx-background-radius: 20; -fx-border-color: #ff4500;" VBox.vgrow="ALWAYS">
                 <columns>
                     <TableColumn fx:id="colFoodId" text="Food ID" />
                     <TableColumn fx:id="colName" text="Name" />

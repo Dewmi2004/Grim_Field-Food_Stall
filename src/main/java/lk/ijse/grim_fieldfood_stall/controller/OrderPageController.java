@@ -21,7 +21,6 @@ public class OrderPageController {
     private Button btnPlaceOrder;
 
     @FXML
-
     private ComboBox<?> cmbItemId;
 
     @FXML
