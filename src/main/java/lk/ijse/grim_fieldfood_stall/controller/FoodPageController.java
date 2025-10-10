@@ -4,19 +4,26 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.Stage;
 import lk.ijse.grim_fieldfood_stall.bo.BOFactory;
 import lk.ijse.grim_fieldfood_stall.bo.custom.FoodBO;
 import lk.ijse.grim_fieldfood_stall.dto.FoodDTO;
 import lk.ijse.grim_fieldfood_stall.model.FoodTM;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
 public class FoodPageController {
 
+    public Button btnBack;
     @FXML
     private Button btnClearFood;
 
@@ -205,5 +212,17 @@ public class FoodPageController {
     private Optional<ButtonType> showConfirm(String message) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, message, ButtonType.OK, ButtonType.CANCEL);
         return alert.showAndWait();
+    }
+
+    public void btnBackOnAction(ActionEvent actionEvent) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/lk/ijse/grim_fieldfood_stall/assests/DashBoard.fxml"));
+        Parent root = loader.load();
+
+        Stage stage = ((Stage)((Node)actionEvent.getSource()).getScene().getWindow());
+
+        stage.setScene(new Scene(root));
+        stage.centerOnScreen();
+        stage.setTitle("Dashboard");
+        stage.show();
     }
 }

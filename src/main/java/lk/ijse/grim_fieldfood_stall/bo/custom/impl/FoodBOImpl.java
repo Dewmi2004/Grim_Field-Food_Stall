@@ -40,4 +40,15 @@ public class FoodBOImpl implements FoodBO {
         }
         return list;
     }
+
+    @Override
+    public ArrayList<FoodDTO> getAllFood() {
+        ArrayList<Food> foods = (ArrayList<Food>) foodDAO.getAll();
+
+        ArrayList<FoodDTO> foodDTOS = new ArrayList<>();
+        for (Food s : foods) {
+            foodDTOS.add(new FoodDTO(s.getFoodId(),s.getName(),s.getQuantity(),s.getUnitPrice(),s.getTotalPrice()));
+        }
+        return foodDTOS;
+    }
 }
