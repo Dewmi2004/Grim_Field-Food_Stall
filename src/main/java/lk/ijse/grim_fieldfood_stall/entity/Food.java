@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -26,7 +28,18 @@ public class Food {
     @Column(nullable = false)
     private String totalPrice;
 
+    @ManyToMany(mappedBy = "foods")
+    private List<OrderEntity> orders;
+
     public Food(String name, String quantity, String unitPrice, String totalPrice) {
+        this.name = name;
+        this.quantity = quantity;
+        this.unitPrice = unitPrice;
+        this.totalPrice = totalPrice;
+    }
+
+    public Food(long foodId, String name, String quantity, String unitPrice, String totalPrice) {
+        this.foodId = foodId;
         this.name = name;
         this.quantity = quantity;
         this.unitPrice = unitPrice;

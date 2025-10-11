@@ -3,6 +3,8 @@ package lk.ijse.grim_fieldfood_stall.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -18,6 +20,15 @@ public class OrderEntity {
     private String date;
     @Column(nullable = false)
     private String totalAmount;
+
+
+    @ManyToMany
+    @JoinTable(
+            name = "order_food",
+            joinColumns = @JoinColumn(name = "order_id"),
+            inverseJoinColumns = @JoinColumn(name = "food_id")
+    )
+    private List<Food> foods;
 
     public OrderEntity(String date, String totalAmount) {
         this.date = date;
