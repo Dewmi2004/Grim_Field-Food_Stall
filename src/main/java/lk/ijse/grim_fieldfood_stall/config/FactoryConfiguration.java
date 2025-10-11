@@ -27,6 +27,7 @@ public class FactoryConfiguration {
                 : instance;
     }
 
+
     public Session getSession() {
         return sessionFactory.openSession();
     }
