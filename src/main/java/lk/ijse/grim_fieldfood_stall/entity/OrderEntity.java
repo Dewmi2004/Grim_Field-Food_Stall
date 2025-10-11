@@ -3,6 +3,7 @@ package lk.ijse.grim_fieldfood_stall.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -21,17 +22,13 @@ public class OrderEntity {
     @Column(nullable = false)
     private String totalAmount;
 
-
-    @ManyToMany
-    @JoinTable(
-            name = "order_food",
-            joinColumns = @JoinColumn(name = "order_id"),
-            inverseJoinColumns = @JoinColumn(name = "food_id")
-    )
-    private List<Food> foods;
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrderFood> orderFoods = new ArrayList<>();
 
     public OrderEntity(String date, String totalAmount) {
         this.date = date;
         this.totalAmount = totalAmount;
     }
+
+
 }

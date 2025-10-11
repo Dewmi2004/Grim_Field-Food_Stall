@@ -10,7 +10,9 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import lk.ijse.grim_fieldfood_stall.bo.BOFactory;
 import lk.ijse.grim_fieldfood_stall.bo.custom.FoodBO;
+import lk.ijse.grim_fieldfood_stall.bo.custom.OrderBo;
 import lk.ijse.grim_fieldfood_stall.dto.FoodDto;
+import lk.ijse.grim_fieldfood_stall.dto.OrderDto;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -18,6 +20,7 @@ import java.util.ResourceBundle;
 
 public class DashBoardController implements Initializable {
 private final FoodBO foodBO = (FoodBO) BOFactory.getInstance().getBO(BOFactory.BOtypes.FOOD);
+private final OrderBo orderBO = (OrderBo) BOFactory.getInstance().getBO(BOFactory.BOtypes.ORDER);
     public AnchorPane Ank1;
     @FXML
     private Button btnManageFoods;
@@ -70,11 +73,16 @@ private final FoodBO foodBO = (FoodBO) BOFactory.getInstance().getBO(BOFactory.B
         ArrayList<FoodDto> allFood = (ArrayList<FoodDto>) foodBO.getAllFoods();
         lblTotalFoods.setText(String.valueOf(allFood.size()));
     }
+    public void setOrders () throws Exception {
+        ArrayList<OrderDto> allOrders = (ArrayList<OrderDto>) orderBO.getAllOrders();
+        lblTotalOrders.setText(String.valueOf(allOrders.size()));
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
             setFood();
+            setOrders();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

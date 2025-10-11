@@ -5,4 +5,4 @@ import lk.ijse.grim_fieldfood_stall.entity.Food;
 
 public interface FoodDao extends CrudDao<Food> {
     Food findByName(String itemName);
-}
+    Food findById(long id) throws Exception;}

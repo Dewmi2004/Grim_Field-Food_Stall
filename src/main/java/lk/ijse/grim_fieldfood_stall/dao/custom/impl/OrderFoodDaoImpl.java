@@ -1,16 +1,14 @@
 package lk.ijse.grim_fieldfood_stall.dao.custom.impl;
 
 import lk.ijse.grim_fieldfood_stall.config.FactoryConfiguration;
-import lk.ijse.grim_fieldfood_stall.dao.custom.OrderDao;
-import lk.ijse.grim_fieldfood_stall.entity.OrderEntity;
+import lk.ijse.grim_fieldfood_stall.dao.custom.OrderFoodDao;
+import lk.ijse.grim_fieldfood_stall.entity.OrderFood;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
-import java.util.List;
-
-public class OrderDaoImpl implements OrderDao {
+public class OrderFoodDaoImpl implements OrderFoodDao {
     @Override
-    public boolean save(OrderEntity entity) throws Exception {
+    public boolean save(OrderFood entity) throws Exception {
          Session session = FactoryConfiguration.getInstance().getSession();
         Transaction tx = session.beginTransaction();
         try {
@@ -26,11 +24,4 @@ public class OrderDaoImpl implements OrderDao {
         }
     }
 
-    @Override
-    public List<OrderEntity> getAll() {
-        Session session = FactoryConfiguration.getInstance().getSession();
-        List<OrderEntity> list = session.createQuery("from OrderEntity", OrderEntity.class).list();
-        session.close();
-        return list;
-    }
 }

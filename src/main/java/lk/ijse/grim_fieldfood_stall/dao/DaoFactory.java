@@ -2,6 +2,7 @@ package lk.ijse.grim_fieldfood_stall.dao;
 
 import lk.ijse.grim_fieldfood_stall.dao.custom.impl.FoodDaoImpl;
 import lk.ijse.grim_fieldfood_stall.dao.custom.impl.OrderDaoImpl;
+import lk.ijse.grim_fieldfood_stall.dao.custom.impl.OrderFoodDaoImpl;
 
 
 public class DaoFactory {
@@ -17,7 +18,7 @@ public class DaoFactory {
         return instance;
     }
     public enum DAOtypes{
-        FOOD,ORDER
+        FOOD,ORDER,ORDERFOOD
     }
     public SuperDao getDAO(DAOtypes dao){
         switch(dao){
@@ -25,6 +26,8 @@ public class DaoFactory {
                 return new FoodDaoImpl();
                 case ORDER:
                     return new OrderDaoImpl();
+                    case ORDERFOOD:
+                        return new OrderFoodDaoImpl();
 
             default:
                 return null;

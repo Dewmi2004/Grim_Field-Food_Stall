@@ -68,4 +68,11 @@ public class FoodDaoImpl implements FoodDao {
         session.close();
         return item;
     }
+
+    @Override
+    public Food findById(long id) throws Exception {
+        try (Session session = FactoryConfiguration.getInstance().getSession()) {
+            return session.get(Food.class, id);
+        }
+    }
 }

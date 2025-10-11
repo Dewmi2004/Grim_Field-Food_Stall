@@ -28,9 +28,8 @@ public class Food {
     @Column(nullable = false)
     private String totalPrice;
 
-    @ManyToMany(mappedBy = "foods")
-    private List<OrderEntity> orders;
-
+    @OneToMany(mappedBy = "food")
+    private List<OrderFood> orderFoods;
     public Food(String name, String quantity, String unitPrice, String totalPrice) {
         this.name = name;
         this.quantity = quantity;

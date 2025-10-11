@@ -162,6 +162,7 @@ public class OrderPageController implements Initializable {
         try {
             OrderDto dto = new OrderDto( txtDate.getText(), lblTotalAmount.getText(), cartList);
             boolean success = orderBo.placeOrder(dto);
+//            CartDto cartDto = new CartDto(txtQuantity.getText());
             if (success) {
                 new Alert(Alert.AlertType.INFORMATION, "Order placed successfully!").show();
                 clearAll();

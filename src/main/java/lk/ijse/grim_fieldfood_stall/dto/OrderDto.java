@@ -21,4 +21,10 @@ public class OrderDto {
         this.totalAmount = totalAmount;
         this.cartList = cartList;
     }
+
+    public OrderDto(Long orderId, String date, String totalAmount) {
+        this.orderId = orderId;
+        this.date = date;
+        this.totalAmount = totalAmount;
+    }
 }
