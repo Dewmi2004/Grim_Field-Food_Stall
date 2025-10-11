@@ -5,6 +5,8 @@ import lk.ijse.grim_fieldfood_stall.dao.custom.FoodDao;
 import lk.ijse.grim_fieldfood_stall.entity.Food;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.query.Query;
+
 import java.util.List;
 
 public class FoodDaoImpl implements FoodDao {
@@ -55,5 +57,15 @@ public class FoodDaoImpl implements FoodDao {
         List<Food> list = session.createQuery("from Food", Food.class).list();
         session.close();
         return list;
+    }
+
+    @Override
+    public Food findByName(String itemName) {
+        Session session = FactoryConfiguration.getInstance().getSession();
+        Query<Food> query = session.createQuery("FROM Food WHERE name = :name", Food.class);
+        query.setParameter("name", itemName);
+        Food item = query.uniqueResult();
+        session.close();
+        return item;
     }
 }

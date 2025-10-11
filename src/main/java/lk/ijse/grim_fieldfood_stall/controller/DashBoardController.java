@@ -10,7 +10,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import lk.ijse.grim_fieldfood_stall.bo.BOFactory;
 import lk.ijse.grim_fieldfood_stall.bo.custom.FoodBO;
-import lk.ijse.grim_fieldfood_stall.dto.FoodDTO;
+import lk.ijse.grim_fieldfood_stall.dto.FoodDto;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -67,7 +67,7 @@ private final FoodBO foodBO = (FoodBO) BOFactory.getInstance().getBO(BOFactory.B
         }
     }
     public void setFood () throws Exception {
-        ArrayList<FoodDTO> allFood = foodBO.getAllFood();
+        ArrayList<FoodDto> allFood = (ArrayList<FoodDto>) foodBO.getAllFoods();
         lblTotalFoods.setText(String.valueOf(allFood.size()));
     }
 

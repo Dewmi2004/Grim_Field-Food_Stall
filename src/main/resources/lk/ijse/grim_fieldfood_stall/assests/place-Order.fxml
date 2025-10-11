@@ -42,9 +42,10 @@
             <!-- Item Selection -->
             <HBox spacing="10.0">
                 <Label prefHeight="30.0" prefWidth="120.0" style="-fx-text-fill: #FFFFFF; -fx-font-size: 20px; -fx-font-weight: bold;" text="Item Name" />
-                <ComboBox fx:id="cmbItemId" prefHeight="27.0" prefWidth="306.0" style="-fx-background-color: #000000; -fx-text-fill: #FFFFFF; -fx-border-color: #ff4500; -fx-border-width: 2.5;" />
+                <ComboBox fx:id="cmbItemId" onAction="#ItemInfoOnAction" prefHeight="27.0" prefWidth="306.0" style="-fx-background-color: #000000; -fx-text-fill: #FFFFFF; -fx-border-color: #ff4500; -fx-border-width: 2.5;" />
                 <Label fx:id="lblItemId" prefHeight="20.0" prefWidth="98.0" style="-fx-text-fill: #FFFFFF; -fx-font-size: 20px; -fx-font-weight: bold;" text="Item ID" />
-                <Label fx:id="lblAvailableQuantity" prefHeight="30.0" prefWidth="209.0" style="-fx-text-fill: #FFFFFF; -fx-font-size: 20px; -fx-font-weight: bold;" text="Available Quantity" />
+                <Label fx:id="lblAvailableQuantity" prefHeight="30.0" prefWidth="178.0" style="-fx-text-fill: #FFFFFF; -fx-font-size: 20px; -fx-font-weight: bold;" text="Available Quantity" />
+            <Label fx:id="lblUnitPrice" layoutX="566.0" layoutY="10.0" prefHeight="30.0" prefWidth="141.0" style="-fx-text-fill: #FFFFFF; -fx-font-size: 20px; -fx-font-weight: bold;" text="Unit Price" />
             </HBox>
 
             <!-- Quantity Input with Flicker Animation -->

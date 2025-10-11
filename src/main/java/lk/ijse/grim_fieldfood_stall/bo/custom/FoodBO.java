@@ -1,17 +1,18 @@
 package lk.ijse.grim_fieldfood_stall.bo.custom;
 
 import lk.ijse.grim_fieldfood_stall.bo.SuperBO;
-import lk.ijse.grim_fieldfood_stall.dto.FoodDTO;
+import lk.ijse.grim_fieldfood_stall.dto.FoodDto;
+import lk.ijse.grim_fieldfood_stall.entity.Food;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public interface FoodBO extends SuperBO {
-    boolean saveFood(FoodDTO dto);
-    boolean updateFood(FoodDTO dto);
+    boolean saveFood(FoodDto dto);
+    boolean updateFood(FoodDto dto);
     boolean deleteFood(String id);
-    FoodDTO getFood(String id);
-    List<FoodDTO> getAllFoods();
+    FoodDto getFood(String id);
+    List<FoodDto> getAllFoods();
 
-    ArrayList<FoodDTO> getAllFood();
+    Food findByName(String itemName);
 }

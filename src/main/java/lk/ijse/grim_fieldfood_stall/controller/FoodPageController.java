@@ -14,7 +14,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import lk.ijse.grim_fieldfood_stall.bo.BOFactory;
 import lk.ijse.grim_fieldfood_stall.bo.custom.FoodBO;
-import lk.ijse.grim_fieldfood_stall.dto.FoodDTO;
+import lk.ijse.grim_fieldfood_stall.dto.FoodDto;
 import lk.ijse.grim_fieldfood_stall.model.FoodTM;
 
 import java.io.IOException;
@@ -86,9 +86,9 @@ public class FoodPageController {
 
     private void loadAllFoods() {
         ObservableList<FoodTM> obList = FXCollections.observableArrayList();
-        List<FoodDTO> dtoList = foodBO.getAllFoods();
+        List<FoodDto> dtoList = foodBO.getAllFoods();
 
-        for (FoodDTO dto : dtoList) {
+        for (FoodDto dto : dtoList) {
             obList.add(new FoodTM(
                     dto.getFoodId(),
                     dto.getName(),
@@ -116,7 +116,7 @@ public class FoodPageController {
     @FXML
     void btnSaveFoodOnAction(ActionEvent event) {
         if (isInputValid()) {
-            FoodDTO dto = new FoodDTO(
+            FoodDto dto = new FoodDto(
                     txtName.getText(),
                     txtQuantity.getText(),
                     txtUnitPrice.getText(),
@@ -139,7 +139,7 @@ public class FoodPageController {
         if (isInputValid()) {
             long id = Long.parseLong(txtFoodId.getText());
 
-            FoodDTO dto = new FoodDTO(
+            FoodDto dto = new FoodDto(
                         id,
                     txtName.getText(),
                     txtQuantity.getText(),

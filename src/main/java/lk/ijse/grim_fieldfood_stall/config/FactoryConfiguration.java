@@ -1,5 +1,6 @@
 package lk.ijse.grim_fieldfood_stall.config;
 
+import lk.ijse.grim_fieldfood_stall.entity.OrderEntity;
 import lk.ijse.grim_fieldfood_stall.entity.Food;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -15,6 +16,7 @@ public class FactoryConfiguration {
         Configuration configuration = new Configuration();
 //        configuration.configure();
         configuration.addAnnotatedClass(Food.class);
+        configuration.addAnnotatedClass(OrderEntity.class);
 
 
         sessionFactory = configuration.buildSessionFactory();
