@@ -13,13 +13,11 @@ public class FactoryConfiguration {
     private final SessionFactory sessionFactory;
 
     private FactoryConfiguration() {
-
         Configuration configuration = new Configuration();
-//        configuration.configure();
+        configuration.configure("hibernate.cfg.xml");
         configuration.addAnnotatedClass(Food.class);
         configuration.addAnnotatedClass(OrderEntity.class);
         configuration.addAnnotatedClass(OrderFood.class);
-
 
         sessionFactory = configuration.buildSessionFactory();
     }

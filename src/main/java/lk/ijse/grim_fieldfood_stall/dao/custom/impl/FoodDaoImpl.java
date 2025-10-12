@@ -16,57 +16,96 @@ public class FoodDaoImpl implements FoodDao {
     public boolean save(Food entity) {
         Session session = factoryConfiguration.getSession();
         Transaction tx = session.beginTransaction();
-        session.persist(entity);
-        tx.commit();
-        session.close();
-        return true;
+        try {
+            session.persist(entity);
+            tx.commit();
+            return true;
+        } catch (Exception e) {
+            if (tx != null) tx.rollback();
+            e.printStackTrace();
+            return false;
+        } finally {
+            session.close();
+        }
     }
 
     @Override
     public boolean update(Food entity) {
         Session session = factoryConfiguration.getSession();
         Transaction tx = session.beginTransaction();
-        session.merge(entity);
-        tx.commit();
-        session.close();
-        return true;
+        try {
+            session.merge(entity);
+            tx.commit();
+            return true;
+        } catch (Exception e) {
+            if (tx != null) tx.rollback();
+            e.printStackTrace();
+            return false;
+        } finally {
+            session.close();
+        }
     }
 
     @Override
     public boolean delete(String id) {
         Session session = factoryConfiguration.getSession();
         Transaction tx = session.beginTransaction();
-        Food food = session.get(Food.class, id);
-        if (food != null) session.remove(food);
-        tx.commit();
-        session.close();
-        return true;
+        try {
+            Food food = session.get(Food.class, Long.parseLong(id));
+            if (food != null) session.remove(food);
+            tx.commit();
+            return true;
+        } catch (Exception e) {
+            if (tx != null) tx.rollback();
+            e.printStackTrace();
+            return false;
+        } finally {
+            session.close();
+        }
     }
 
     @Override
     public Food get(String id) {
         Session session = factoryConfiguration.getSession();
-        Food food = session.get(Food.class, id);
-        session.close();
-        return food;
+        try {
+            Food food = session.get(Food.class, Long.parseLong(id));
+            return food;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            session.close();
+        }
     }
 
     @Override
     public List<Food> getAll() {
         Session session = factoryConfiguration.getSession();
-        List<Food> list = session.createQuery("from Food", Food.class).list();
-        session.close();
-        return list;
+        try {
+            List<Food> list = session.createQuery("from Food", Food.class).list();
+            return list;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            session.close();
+        }
     }
 
     @Override
     public Food findByName(String itemName) {
         Session session = FactoryConfiguration.getInstance().getSession();
-        Query<Food> query = session.createQuery("FROM Food WHERE name = :name", Food.class);
-        query.setParameter("name", itemName);
-        Food item = query.uniqueResult();
-        session.close();
-        return item;
+        try {
+            Query<Food> query = session.createQuery("FROM Food WHERE name = :name", Food.class);
+            query.setParameter("name", itemName);
+            Food item = query.uniqueResult();
+            return item;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            session.close();
+        }
     }
 
     @Override

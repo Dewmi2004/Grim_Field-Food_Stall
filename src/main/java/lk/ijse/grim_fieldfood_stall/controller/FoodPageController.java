@@ -5,6 +5,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -18,10 +19,12 @@ import lk.ijse.grim_fieldfood_stall.dto.FoodDto;
 import lk.ijse.grim_fieldfood_stall.model.FoodTM;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.List;
 import java.util.Optional;
+import java.util.ResourceBundle;
 
-public class FoodPageController {
+public class FoodPageController implements Initializable {
 
     public Button btnBack;
     @FXML
@@ -71,7 +74,8 @@ public class FoodPageController {
 
     private final FoodBO foodBO = (FoodBO) BOFactory.getInstance().getBO(BOFactory.BOtypes.FOOD);
 
-    public void initialize() {
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
         setCellValueFactory();
         loadAllFoods();
     }
@@ -136,7 +140,7 @@ public class FoodPageController {
 
     @FXML
     void btnUpdateFoodOnAction(ActionEvent event) {
-        if (isInputValid()) {
+        if (isInputValid() && !txtFoodId.getText().isEmpty()) {
             long id = Long.parseLong(txtFoodId.getText());
 
             FoodDto dto = new FoodDto(
@@ -202,6 +206,16 @@ public class FoodPageController {
             showAlert(Alert.AlertType.WARNING, "Please fill in all fields.");
             return false;
         }
+        
+        try {
+            Integer.parseInt(txtQuantity.getText());
+            Double.parseDouble(txtUnitPrice.getText());
+            Double.parseDouble(txtTotalPrice.getText());
+        } catch (NumberFormatException e) {
+            showAlert(Alert.AlertType.WARNING, "Please enter valid numbers for quantity and prices.");
+            return false;
+        }
+        
         return true;
     }
 

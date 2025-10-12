@@ -30,18 +30,14 @@ public class OrderBoImpl implements OrderBo {
 
             OrderFood orderFood = new OrderFood();
             orderFood.setOrder(order);
-
-            Food foodRef = new Food();
-            foodRef.setFoodId(item.getFoodId());
-            orderFood.setFood(foodRef);
-
+            orderFood.setFood(foodEntity);
             orderFood.setOrderQuantity(item.getQuantity());
             orderFoodDao.save(orderFood);
 
-//            int available = Integer.parseInt(entity.getQuantity());
-//            int ordered = Integer.parseInt(item.getQuantity());
-//            entity.setQuantity(String.valueOf(available - ordered));
-//            foodDao.update(entity);
+            int available = Integer.parseInt(foodEntity.getQuantity());
+            int ordered = Integer.parseInt(item.getQuantity());
+            foodEntity.setQuantity(String.valueOf(available - ordered));
+            foodDao.update(foodEntity);
         }
 
         return true;

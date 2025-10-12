@@ -12,4 +12,7 @@ module lk.ijse.grim_fieldfood_stall {
     opens lk.ijse.grim_fieldfood_stall.controller to javafx.fxml;
     opens lk.ijse.grim_fieldfood_stall.entity to org.hibernate.orm.core;
     opens lk.ijse.grim_fieldfood_stall.model to javafx.base;
+    opens lk.ijse.grim_fieldfood_stall.dto to javafx.base;
+    opens lk.ijse.grim_fieldfood_stall.bo to javafx.base;
+    opens lk.ijse.grim_fieldfood_stall.dao to javafx.base;
 }

@@ -18,10 +18,8 @@
     <children>
         <VBox alignment="TOP_CENTER" prefHeight="700.0" prefWidth="860.0" spacing="15.0" style="-fx-background-color:linear-gradient(to bottom, #000000, #D2691E); -fx-background-radius: 25 25 60 60; -fx-border-color: #ff4500; -fx-border-width: 5; -fx-padding: 20; -fx-effect: dropshadow(gaussian, #000000, 15, 0.7, 3, 3);" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="15.0">
 
-            <!-- Title -->
             <Label opacity="0.8" style="-fx-font-size: 70px; -fx-text-fill: #ff4500; -fx-font-family: 'Chiller'; -fx-effect: dropshadow(gaussian, #ffffff, 8, 0.5, 3, 3);" text="🎃 Coffin Feast - Food Items 👻" />
 
-            <!-- Input Fields in Grid -->
             <GridPane hgap="15.0" vgap="12.0">
                 <columnConstraints>
                     <javafx.scene.layout.ColumnConstraints halignment="RIGHT" maxWidth="209.60001220703126" minWidth="120.0" prefWidth="209.60001220703126" />
@@ -68,7 +66,6 @@
                 </rowConstraints>
             </GridPane>
 
-            <!-- Action Buttons -->
             <HBox alignment="CENTER" opacity="0.8" prefHeight="35.0" prefWidth="810.0" spacing="15.0">
             <Button fx:id="btnBack" layoutX="631.0" layoutY="10.0" onAction="#btnBackOnAction" prefHeight="57.0" prefWidth="207.0" style="-fx-font-weight: bold; -fx-padding: 10 25; -fx-background-radius: 8; -fx-effect: dropshadow(gaussian, #000000, 8, 0.7, 2, 2);">
                <graphic>
@@ -112,7 +109,6 @@
                 </Button>
             </HBox>
 
-            <!-- Food Table -->
             <TableView fx:id="tblFood" onMouseClicked="#clickOnAction" opacity="0.8" prefHeight="300.0" prefWidth="820.0" style="-fx-background-color: #D2691E; -fx-border-width: 1; -fx-selection-bar: #ff4500; -fx-selection-bar-non-focused: #ff4500; -fx-background-radius: 20; -fx-border-color: #ff4500;" VBox.vgrow="ALWAYS">
                 <columns>
                     <TableColumn fx:id="colFoodId" text="Food ID" />

@@ -52,7 +52,21 @@ private final OrderBo orderBO = (OrderBo) BOFactory.getInstance().getBO(BOFactor
 
     @FXML
     void handleManageProfit(ActionEvent event) {
-
+        try {
+            @SuppressWarnings("unchecked")
+            ArrayList<OrderDto> allOrders = (ArrayList<OrderDto>) orderBO.getAllOrders();
+            double totalProfit = 0.0;
+            
+            for (OrderDto order : allOrders) {
+                totalProfit += Double.parseDouble(order.getTotalAmount());
+            }
+            
+            lblTotalProfit.setText(String.format("%.2f", totalProfit));
+            new Alert(Alert.AlertType.INFORMATION, "Total Profit: $" + String.format("%.2f", totalProfit)).show();
+        } catch (Exception e) {
+            new Alert(Alert.AlertType.ERROR, "Error calculating profit: " + e.getMessage()).show();
+            e.printStackTrace();
+        }
     }
     private void nevigateTo(String s) {
         try {
@@ -74,6 +88,7 @@ private final OrderBo orderBO = (OrderBo) BOFactory.getInstance().getBO(BOFactor
         lblTotalFoods.setText(String.valueOf(allFood.size()));
     }
     public void setOrders () throws Exception {
+        @SuppressWarnings("unchecked")
         ArrayList<OrderDto> allOrders = (ArrayList<OrderDto>) orderBO.getAllOrders();
         lblTotalOrders.setText(String.valueOf(allOrders.size()));
     }
@@ -83,8 +98,22 @@ private final OrderBo orderBO = (OrderBo) BOFactory.getInstance().getBO(BOFactor
         try {
             setFood();
             setOrders();
+            setProfit();
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            new Alert(Alert.AlertType.ERROR, "Error initializing dashboard: " + e.getMessage()).show();
+            e.printStackTrace();
         }
+    }
+    
+    public void setProfit() throws Exception {
+        @SuppressWarnings("unchecked")
+        ArrayList<OrderDto> allOrders = (ArrayList<OrderDto>) orderBO.getAllOrders();
+        double totalProfit = 0.0;
+        
+        for (OrderDto order : allOrders) {
+            totalProfit += Double.parseDouble(order.getTotalAmount());
+        }
+        
+        lblTotalProfit.setText(String.format("%.2f", totalProfit));
     }
 }

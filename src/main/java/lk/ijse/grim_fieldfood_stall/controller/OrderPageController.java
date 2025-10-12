@@ -4,9 +4,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.AnchorPane;
 import lk.ijse.grim_fieldfood_stall.bo.BOFactory;
 import lk.ijse.grim_fieldfood_stall.bo.custom.FoodBO;
 import lk.ijse.grim_fieldfood_stall.bo.custom.OrderBo;
@@ -19,10 +21,15 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Optional;
 
 public class OrderPageController implements Initializable {
 
     public Label lblUnitPrice;
+
+    @FXML
+    private AnchorPane orderAnchorPane;
+
     @FXML
     private Button btnAddToCart;
 
@@ -31,6 +38,9 @@ public class OrderPageController implements Initializable {
 
     @FXML
     private Button btnPlaceOrder;
+
+    @FXML
+    private Button btnGoBack;
 
     @FXML
     private ComboBox<String> cmbItemId;
@@ -65,7 +75,6 @@ public class OrderPageController implements Initializable {
     @FXML
     private Label lblOrderId;
 
-
     @FXML
     private Label lblTotalAmount;
 
@@ -80,6 +89,7 @@ public class OrderPageController implements Initializable {
 
     @FXML
     private TextField txtQuantity;
+
     private final ObservableList<CartTm> cartList = FXCollections.observableArrayList();
     private final FoodBO foodBO = (FoodBO) BOFactory.getInstance().getBO(BOFactory.BOtypes.FOOD);
     private final OrderBo orderBo = (OrderBo) BOFactory.getInstance().getBO(BOFactory.BOtypes.ORDER);
@@ -88,16 +98,21 @@ public class OrderPageController implements Initializable {
         try {
             List<FoodDto> list = foodBO.getAllFoods();
             ObservableList<String> items = FXCollections.observableArrayList();
-            for (FoodDto i : list) items.add(i.getName());
+            for (FoodDto i : list) {
+                items.add(i.getName());
+            }
             cmbItemId.setItems(items);
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) {
+            new Alert(Alert.AlertType.ERROR, "Failed to load food items: " + e.getMessage()).show();
+            e.printStackTrace();
+        }
     }
 
     private void setTableColumns() {
         colItemId.setCellValueFactory(new PropertyValueFactory<>("foodId"));
-        colName.setCellValueFactory(new  PropertyValueFactory<>("name"));
+        colName.setCellValueFactory(new PropertyValueFactory<>("name"));
         colQty.setCellValueFactory(new PropertyValueFactory<>("quantity"));
-        colUnitPrice.setCellValueFactory(new  PropertyValueFactory<>("unitPrice"));
+        colUnitPrice.setCellValueFactory(new PropertyValueFactory<>("unitPrice"));
         colTotal.setCellValueFactory(new PropertyValueFactory<>("total"));
         colRemove.setCellValueFactory(new PropertyValueFactory<>("btnRemove"));
         tblCart.setItems(cartList);
@@ -107,18 +122,47 @@ public class OrderPageController implements Initializable {
     void btnAddtoCartOnAction(ActionEvent event) {
         try {
             String itemName = cmbItemId.getValue();
+
+            if (itemName == null || itemName.isEmpty()) {
+                new Alert(Alert.AlertType.WARNING, "Please select an item!").show();
+                return;
+            }
+
+            if (txtQuantity.getText().isEmpty()) {
+                new Alert(Alert.AlertType.WARNING, "Please enter quantity!").show();
+                return;
+            }
+
             Food entity = foodBO.findByName(itemName);
-            if (entity == null) return;
+            if (entity == null) {
+                new Alert(Alert.AlertType.ERROR, "Item not found!").show();
+                return;
+            }
 
             int available = Integer.parseInt(entity.getQuantity());
             int qty = Integer.parseInt(txtQuantity.getText());
+
+            if (qty <= 0) {
+                new Alert(Alert.AlertType.WARNING, "Quantity must be greater than 0!").show();
+                return;
+            }
 
             if (available <= 0) {
                 new Alert(Alert.AlertType.WARNING, "No quantity left for this item!").show();
                 return;
             }
+
             if (qty > available) {
-                new Alert(Alert.AlertType.WARNING, "Requested quantity exceeds available!").show();
+                new Alert(Alert.AlertType.WARNING, "Requested quantity exceeds available! Available: " + available).show();
+                return;
+            }
+
+            Optional<CartTm> existingItem = cartList.stream()
+                    .filter(tm -> tm.getFoodId() == entity.getFoodId())
+                    .findFirst();
+
+            if (existingItem.isPresent()) {
+                new Alert(Alert.AlertType.WARNING, "Item already in cart! Remove it first to update quantity.").show();
                 return;
             }
 
@@ -126,8 +170,16 @@ public class OrderPageController implements Initializable {
             double total = qty * unitPrice;
 
             Button btnRemove = new Button("Remove");
-            CartTm tm = new CartTm(entity.getFoodId(), entity.getName(), String.valueOf(qty),
-                    entity.getUnitPrice(), String.valueOf(total), btnRemove);
+            btnRemove.setStyle("-fx-background-color: #ff0000; -fx-text-fill: white;");
+
+            CartTm tm = new CartTm(
+                    entity.getFoodId(),
+                    entity.getName(),
+                    String.valueOf(qty),
+                    entity.getUnitPrice(),
+                    String.format("%.2f", total),
+                    btnRemove
+            );
 
             btnRemove.setOnAction(e -> {
                 cartList.remove(tm);
@@ -138,7 +190,15 @@ public class OrderPageController implements Initializable {
             tblCart.refresh();
             calculateTotal();
 
-        } catch (Exception e) { e.printStackTrace(); }
+            txtQuantity.clear();
+            cmbItemId.setValue(null);
+
+        } catch (NumberFormatException e) {
+            new Alert(Alert.AlertType.ERROR, "Please enter a valid number for quantity!").show();
+        } catch (Exception e) {
+            new Alert(Alert.AlertType.ERROR, "Error adding item to cart: " + e.getMessage()).show();
+            e.printStackTrace();
+        }
     }
 
     private void calculateTotal() {
@@ -151,23 +211,83 @@ public class OrderPageController implements Initializable {
 
     @FXML
     void btnCheckBalanceOnAction(ActionEvent event) {
-        double paid = Double.parseDouble(txtPaidAmount.getText());
-        double total = Double.parseDouble(lblTotalAmount.getText());
-        double change = paid - total;
-        lblChange.setText(String.format("%.2f", change));
+        try {
+            if (txtPaidAmount.getText().isEmpty()) {
+                new Alert(Alert.AlertType.WARNING, "Please enter paid amount!").show();
+                return;
+            }
+
+            double paid = Double.parseDouble(txtPaidAmount.getText());
+            double total = Double.parseDouble(lblTotalAmount.getText());
+
+            if (paid < total) {
+                new Alert(Alert.AlertType.WARNING, "Insufficient payment! Need: " + String.format("%.2f", total - paid) + " more").show();
+                lblChange.setText("0.00");
+                return;
+            }
+
+            double change = paid - total;
+            lblChange.setText(String.format("%.2f", change));
+
+        } catch (NumberFormatException e) {
+            new Alert(Alert.AlertType.ERROR, "Please enter a valid amount!").show();
+        }
     }
 
     @FXML
     void btnPlaceOrderOnAction(ActionEvent event) {
         try {
-            OrderDto dto = new OrderDto( txtDate.getText(), lblTotalAmount.getText(), cartList);
-            boolean success = orderBo.placeOrder(dto);
-//            CartDto cartDto = new CartDto(txtQuantity.getText());
-            if (success) {
-                new Alert(Alert.AlertType.INFORMATION, "Order placed successfully!").show();
-                clearAll();
+            if (cartList.isEmpty()) {
+                new Alert(Alert.AlertType.WARNING, "Cart is empty! Add items before placing order.").show();
+                return;
             }
-        } catch (Exception e) { e.printStackTrace(); }
+
+            if (txtPaidAmount.getText().isEmpty()) {
+                new Alert(Alert.AlertType.WARNING, "Please enter paid amount!").show();
+                return;
+            }
+
+            double paid = Double.parseDouble(txtPaidAmount.getText());
+            double total = Double.parseDouble(lblTotalAmount.getText());
+
+            if (paid < total) {
+                new Alert(Alert.AlertType.WARNING, "Insufficient payment!").show();
+                return;
+            }
+
+            OrderDto dto = new OrderDto(txtDate.getText(), lblTotalAmount.getText(), cartList);
+            boolean success = orderBo.placeOrder(dto);
+
+            if (success) {
+                new Alert(Alert.AlertType.INFORMATION, "Order placed successfully!\nChange: " + lblChange.getText()).show();
+                clearAll();
+            } else {
+                new Alert(Alert.AlertType.ERROR, "Failed to place order!").show();
+            }
+        } catch (NumberFormatException e) {
+            new Alert(Alert.AlertType.ERROR, "Please enter a valid amount!").show();
+        } catch (Exception e) {
+            new Alert(Alert.AlertType.ERROR, "Error placing order: " + e.getMessage()).show();
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    void btnGoBackOnAction(ActionEvent event) {
+        try {
+            AnchorPane parentPane = (AnchorPane) orderAnchorPane.getParent();
+            parentPane.getChildren().clear();
+
+            AnchorPane dashboardPane = FXMLLoader.load(getClass().getResource("/lk/ijse/grim_fieldfood_stall/assests/DashBoard.fxml"));
+
+            dashboardPane.prefWidthProperty().bind(parentPane.widthProperty());
+            dashboardPane.prefHeightProperty().bind(parentPane.heightProperty());
+
+            parentPane.getChildren().add(dashboardPane);
+        } catch (Exception e) {
+            new Alert(Alert.AlertType.ERROR, "Failed to navigate to Dashboard: " + e.getMessage()).show();
+            e.printStackTrace();
+        }
     }
 
     private void clearAll() {
@@ -177,6 +297,9 @@ public class OrderPageController implements Initializable {
         lblChange.setText("0.00");
         cmbItemId.setValue(null);
         txtQuantity.clear();
+        lblItemId.setText("");
+        lblAvailableQuantity.setText("");
+        lblUnitPrice.setText("");
     }
 
     @Override
@@ -184,9 +307,25 @@ public class OrderPageController implements Initializable {
         txtDate.setText(String.valueOf(LocalDate.now()));
         loadItemNames();
         setTableColumns();
+        lblTotalAmount.setText("0.00");
+        lblChange.setText("0.00");
     }
 
+    @FXML
     public void ItemInfoOnAction(ActionEvent actionEvent) {
-
+        try {
+            String itemName = cmbItemId.getValue();
+            if (itemName != null && !itemName.isEmpty()) {
+                Food entity = foodBO.findByName(itemName);
+                if (entity != null) {
+                    lblItemId.setText(String.valueOf(entity.getFoodId()));
+                    lblAvailableQuantity.setText(entity.getQuantity());
+                    lblUnitPrice.setText(entity.getUnitPrice());
+                }
+            }
+        } catch (Exception e) {
+            new Alert(Alert.AlertType.ERROR, "Error loading item info: " + e.getMessage()).show();
+            e.printStackTrace();
+        }
     }
 }
