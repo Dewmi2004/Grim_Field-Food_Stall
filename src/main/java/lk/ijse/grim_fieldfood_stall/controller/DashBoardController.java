@@ -52,7 +52,7 @@ private final OrderBo orderBO = (OrderBo) BOFactory.getInstance().getBO(BOFactor
 
     @FXML
     void handleManageProfit(ActionEvent event) {
-
+nevigateTo("/lk/ijse/grim_fieldfood_stall/assests/Profit.fxml");
     }
     private void nevigateTo(String s) {
         try {

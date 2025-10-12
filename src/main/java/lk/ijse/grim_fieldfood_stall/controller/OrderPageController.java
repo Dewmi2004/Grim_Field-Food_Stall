@@ -4,9 +4,14 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 import lk.ijse.grim_fieldfood_stall.bo.BOFactory;
 import lk.ijse.grim_fieldfood_stall.bo.custom.FoodBO;
 import lk.ijse.grim_fieldfood_stall.bo.custom.OrderBo;
@@ -15,6 +20,7 @@ import lk.ijse.grim_fieldfood_stall.dto.OrderDto;
 import lk.ijse.grim_fieldfood_stall.entity.Food;
 import lk.ijse.grim_fieldfood_stall.model.CartTm;
 
+import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.List;
@@ -23,6 +29,7 @@ import java.util.ResourceBundle;
 public class OrderPageController implements Initializable {
 
     public Label lblUnitPrice;
+    public Button btnBack;
     @FXML
     private Button btnAddToCart;
 
@@ -109,9 +116,10 @@ public class OrderPageController implements Initializable {
             String itemName = cmbItemId.getValue();
             Food entity = foodBO.findByName(itemName);
             if (entity == null) return;
-
             int available = Integer.parseInt(entity.getQuantity());
+//            int currentQty = Integer.parseInt(entity.getQuantity());
             int qty = Integer.parseInt(txtQuantity.getText());
+//            int available =(currentQty-=qty);
 
             if (available <= 0) {
                 new Alert(Alert.AlertType.WARNING, "No quantity left for this item!").show();
@@ -162,7 +170,6 @@ public class OrderPageController implements Initializable {
         try {
             OrderDto dto = new OrderDto( txtDate.getText(), lblTotalAmount.getText(), cartList);
             boolean success = orderBo.placeOrder(dto);
-//            CartDto cartDto = new CartDto(txtQuantity.getText());
             if (success) {
                 new Alert(Alert.AlertType.INFORMATION, "Order placed successfully!").show();
                 clearAll();
@@ -184,9 +191,37 @@ public class OrderPageController implements Initializable {
         txtDate.setText(String.valueOf(LocalDate.now()));
         loadItemNames();
         setTableColumns();
+        cmbItemId.setOnAction(event -> showSelectedItemDetails());
+
     }
 
-    public void ItemInfoOnAction(ActionEvent actionEvent) {
 
+    private void showSelectedItemDetails() {
+        try {
+            String itemName = cmbItemId.getValue();
+            if (itemName == null || itemName.isEmpty()) return;
+
+            Food entity = foodBO.findByName(itemName);
+            if (entity != null) {
+                lblItemId.setText(String.valueOf(entity.getFoodId()));
+                lblAvailableQuantity.setText(entity.getQuantity());
+                lblUnitPrice.setText(entity.getUnitPrice());
+            } else {
+                lblItemId.setText("N/A");
+                lblAvailableQuantity.setText("0");
+                lblUnitPrice.setText("0.00");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void btnBackOnAction(ActionEvent actionEvent) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/lk/ijse/grim_fieldfood_stall/assests/DashBoard.fxml"));
+        Parent root = loader.load();
+        Stage stage = ((Stage) ((Node) actionEvent.getSource()).getScene().getWindow());
+        stage.setScene(new Scene(root));
+        stage.centerOnScreen();
+        stage.setTitle("Dashboard");
+        stage.show();
     }
 }

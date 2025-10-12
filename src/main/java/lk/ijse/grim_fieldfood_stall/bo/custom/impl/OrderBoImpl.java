@@ -38,10 +38,11 @@ public class OrderBoImpl implements OrderBo {
             orderFood.setOrderQuantity(item.getQuantity());
             orderFoodDao.save(orderFood);
 
-//            int available = Integer.parseInt(entity.getQuantity());
+//            int available = Integer.parseInt(foodEntity.getQuantity());
 //            int ordered = Integer.parseInt(item.getQuantity());
-//            entity.setQuantity(String.valueOf(available - ordered));
-//            foodDao.update(entity);
+//            foodEntity.setQuantity(String.valueOf(available - ordered));
+//
+//            foodDao.update(foodEntity);
         }
 
         return true;
@@ -54,5 +55,11 @@ public class OrderBoImpl implements OrderBo {
             list.add(new OrderDto(f.getOrderId (),f.getDate(),f.getTotalAmount()));
         }
         return list;
+    }
+
+    @Override
+    public List<OrderFood> getAllOrderFoods() {
+        return orderFoodDao.getAll();
+
     }
 }
