@@ -13,83 +13,77 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="747.0" prefWidth="900.0" style="-fx-background-color: linear-gradient(to bottom, #0a0a0a, #1a1a1a);" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.drivingschoolormfinal.controller.DashBoardController">
+<AnchorPane fx:id="Ank1" prefHeight="747.0" prefWidth="900.0" style="-fx-background-color: linear-gradient(to bottom, #000000, #1a1a1a);" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.grim_fieldfood_stall.controller.DashBoardController">
 
     <children>
-        <VBox alignment="TOP_CENTER" prefHeight="624.0" prefWidth="860.0" spacing="20.0" style="-fx-background-color: rgba(120, 104, 106, 0.8);-fx-background-radius: 25 25 60 60;-fx-border-color: darkred;-fx-border-width: 5;-fx-padding: 25; -fx-effect: dropshadow(gaussian, black, 15, 0.7, 3, 3);" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
+        <VBox alignment="TOP_CENTER" prefHeight="624.0" prefWidth="860.0" spacing="20.0" style="-fx-background-color: linear-gradient(to bottom, #000000,#D2691E); -fx-background-radius: 25 25 60 60; -fx-border-color: #ff4500; -fx-border-width: 5; -fx-padding: 25; -fx-effect: dropshadow(gaussian, #000000, 15, 0.7, 3, 3);" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
 
-            <!-- Title -->
-            <Label prefHeight="72.0" prefWidth="498.0" style="-fx-font-size: 50px; -fx-text-fill: crimson; -fx-font-family: 'Chiller'; -fx-effect: dropshadow(gaussian, black, 10, 0.8, 3, 3);" text="☠ Coffin Feast - Dashboard ☠" />
+            <Label opacity="0.8" style="-fx-font-size: 70px; -fx-text-fill: #ff4500; -fx-font-family: 'Chiller'; -fx-effect: dropshadow(gaussian, #ffffff, 8, 0.5, 3, 3);" text="🎃 Coffin Feast - Food Items 👻" />
 
-            <!-- Dashboard Cards -->
             <GridPane alignment="CENTER" hgap="25.0" vgap="25.0">
                 <columnConstraints>
-                    <ColumnConstraints percentWidth="50" />
-                    <ColumnConstraints percentWidth="50" />
+                    <ColumnConstraints percentWidth="50.0" />
+                    <ColumnConstraints percentWidth="50.0" />
+                    <ColumnConstraints percentWidth="50.0" />
                 </columnConstraints>
                 <rowConstraints>
                     <RowConstraints />
                     <RowConstraints />
                 </rowConstraints>
 
-                <!-- Users Card -->
-                <VBox alignment="CENTER" spacing="10" style="-fx-padding: 20;                              -fx-background-color: #2b2b2b;                              -fx-background-radius: 15;                              -fx-border-color: crimson;                              -fx-border-radius: 15;                              -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.6), 12, 0, 0, 4);" GridPane.columnIndex="0" GridPane.rowIndex="0">
-                    <Label style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: crimson;" text="Users" />
-                    <Label fx:id="lblTotalUsers" style="-fx-font-size: 26px; -fx-text-fill: white;" text="0" />
-                    <Button fx:id="btnManageUsers" onAction="#handleManageUsers" style="-fx-background-color: darkred; -fx-text-fill: white; -fx-font-weight: bold;                                    -fx-background-radius: 10; -fx-padding: 8 20; -fx-cursor: hand;" text="Manage Users">
-                        <tooltip><Tooltip text="View and manage users" /></tooltip>
-                    </Button>
-                </VBox>
-
-                <!-- Food Items Card -->
-                <VBox alignment="CENTER" spacing="10" style="-fx-padding: 20;                              -fx-background-color: #2b2b2b;                              -fx-background-radius: 15;                              -fx-border-color: crimson;                              -fx-border-radius: 15;                              -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.6), 12, 0, 0, 4);" GridPane.columnIndex="1" GridPane.rowIndex="0">
-                    <Label prefHeight="30.0" prefWidth="110.0" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: crimson;" text="Food Items" />
-                    <Label fx:id="lblTotalStudents" style="-fx-font-size: 26px; -fx-text-fill: white;" text="0" />
-                    <Button fx:id="btnManageStudents" onAction="#handleManageStudents" style="-fx-background-color: darkred; -fx-text-fill: white; -fx-font-weight: bold;                                    -fx-background-radius: 10; -fx-padding: 8 20; -fx-cursor: hand;" text="Manage Food Items">
+                <VBox alignment="CENTER" opacity="0.87" spacing="10" style="-fx-padding: 20; -fx-background-color: #000000; -fx-background-radius: 15; -fx-border-color: #ff4500; -fx-border-radius: 15; -fx-effect: dropshadow(gaussian, #ffffff, 15, 0.7, 3, 3);" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                    <Label prefHeight="51.0" prefWidth="188.0" style="-fx-font-size: 35px; -fx-font-weight: bold; -fx-text-fill: #ff4500;" text="Food Items" />
+                    <Label fx:id="lblTotalFoods" style="-fx-font-size: 30px; -fx-text-fill: #ffffff;" text="0" />
+                    <Button fx:id="btnManageFoods" onAction="#handleManageFoods" style="-fx-background-color: #ff4500; -fx-text-fill: #ffffff; -fx-font-weight: bold; -fx-background-radius: 10; -fx-padding: 8 20; -fx-cursor: hand;" text="Manage Food Items">
                         <tooltip><Tooltip text="View and manage food items" /></tooltip>
+                        <font>
+                            <Font size="20.0" />
+                        </font>
                     </Button>
                 </VBox>
 
-                <!-- Orders Card -->
-                <VBox alignment="CENTER" spacing="10" style="-fx-padding: 20;                              -fx-background-color: #2b2b2b;                              -fx-background-radius: 15;                              -fx-border-color: crimson;                              -fx-border-radius: 15;                              -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.6), 12, 0, 0, 4);" GridPane.columnIndex="0" GridPane.rowIndex="1">
-                    <Label style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: crimson;" text="Orders" />
-                    <Label fx:id="lblTotalPayments" style="-fx-font-size: 26px; -fx-text-fill: white;" text="0" />
-                    <Button fx:id="btnManagePayments" onAction="#handleManagePayments" style="-fx-background-color: darkred; -fx-text-fill: white; -fx-font-weight: bold;                                    -fx-background-radius: 10; -fx-padding: 8 20; -fx-cursor: hand;" text="Manage Orders">
+                <VBox alignment="CENTER" opacity="0.87" prefHeight="234.0" prefWidth="337.0" spacing="10" style="-fx-padding: 20; -fx-background-color: #000000; -fx-background-radius: 15; -fx-border-color: #ff4500; -fx-border-radius: 15; -fx-effect: dropshadow(gaussian,#ffffff,15, 0.7, 3, 3);" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                    <Label prefHeight="54.0" prefWidth="122.0" style="-fx-font-size: 35px; -fx-font-weight: bold; -fx-text-fill: #ff4500;" text="Orders">
+                        <font>
+                            <Font size="39.0" />
+                        </font></Label>
+                    <Label fx:id="lblTotalOrders" style="-fx-font-size: 30px; -fx-text-fill: #ffffff;" text="0">
+                        <font>
+                            <Font size="21.0" />
+                        </font></Label>
+                    <Button fx:id="btnManageOrders" onAction="#handleManageOrders" style="-fx-background-color: #ff4500; -fx-text-fill: #ffffff; -fx-font-weight: bold; -fx-background-radius: 10; -fx-padding: 8 20; -fx-cursor: hand;" text="Manage Orders">
                         <tooltip><Tooltip text="View and manage orders" /></tooltip>
+                        <font>
+                            <Font size="20.0" />
+                        </font>
                     </Button>
                 </VBox>
 
-                <!-- Profit Card -->
-                <VBox alignment="CENTER" spacing="10" style="-fx-padding: 20;                              -fx-background-color: #2b2b2b;                              -fx-background-radius: 15;                              -fx-border-color: crimson;                              -fx-border-radius: 15;                              -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.6), 12, 0, 0, 4);" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                    <Label style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: crimson;" text="Profit" />
-                    <Label fx:id="lblTotalInstructors" style="-fx-font-size: 26px; -fx-text-fill: white;" text="0" />
-                    <Button fx:id="btnManageInstructors" onAction="#handleManageInstructors" style="-fx-background-color: darkred; -fx-text-fill: white; -fx-font-weight: bold;                                    -fx-background-radius: 10; -fx-padding: 8 20; -fx-cursor: hand;" text="View Profit">
+                <VBox alignment="CENTER" opacity="0.87" spacing="10" style="-fx-padding: 20; -fx-background-color: #000000; -fx-background-radius: 15; -fx-border-color: #ff4500; -fx-border-radius: 15; -fx-effect: dropshadow(gaussian, #ffffff, 15, 0.7, 3, 3);" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                    <Label prefHeight="51.0" prefWidth="106.0" style="-fx-font-size: 35px; -fx-font-weight: bold; -fx-text-fill: #ff4500;" text="Profit" />
+                    <Label fx:id="lblTotalProfit" style="-fx-font-size: 30px; -fx-text-fill: #ffffff;" text="0" />
+                    <Button fx:id="btnManageProfit" onAction="#handleManageProfit" style="-fx-background-color: #ff4500; -fx-text-fill: #ffffff; -fx-font-weight: bold; -fx-background-radius: 10; -fx-padding: 8 20; -fx-cursor: hand;" text="View Profit">
                         <tooltip><Tooltip text="View and manage profit reports" /></tooltip>
+                        <font>
+                            <Font size="20.0" />
+                        </font>
                     </Button>
                 </VBox>
             </GridPane>
-
-            <!-- Back Button -->
-            <HBox alignment="CENTER">
-                <Button onAction="#btnbacktodashonaction" prefHeight="48.0" prefWidth="163.0" style="-fx-background-color: darkred; -fx-background-radius: 10; -fx-font-weight: bold; -fx-padding: 8 20; -fx-cursor: hand;" text="Back To Login" textFill="#faf8f8">
-               <font>
-                  <Font size="16.0" />
-               </font></Button>
+            <HBox alignment="CENTER" prefHeight="186.0" prefWidth="799.0" VBox.vgrow="ALWAYS">
+                <children>
+                    <ImageView fitHeight="159.0" fitWidth="510.0" opacity="0.64" pickOnBounds="true" preserveRatio="true" HBox.hgrow="ALWAYS">
+                        <image>
+                            <Image url="@../images/Screenshot 2025-09-30 122235.png" />
+                        </image>
+                    </ImageView>
+                    <ImageView fitHeight="152.0" fitWidth="538.0" layoutX="10.0" layoutY="10.0" opacity="0.64" pickOnBounds="true" preserveRatio="true" HBox.hgrow="ALWAYS">
+                        <image>
+                            <Image url="@../images/Screenshot 2025-09-30 122235.png" />
+                        </image>
+                    </ImageView>
+                </children>
             </HBox>
-         <HBox alignment="CENTER" prefHeight="186.0" prefWidth="799.0" VBox.vgrow="ALWAYS">
-            <children>
-               <ImageView fitHeight="159.0" fitWidth="510.0" pickOnBounds="true" preserveRatio="true" HBox.hgrow="ALWAYS">
-                  <image>
-                     <Image url="@../images/Screenshot%202025-09-30%20122235.png" />
-                  </image>
-               </ImageView>
-               <ImageView fitHeight="152.0" fitWidth="538.0" layoutX="10.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" HBox.hgrow="ALWAYS">
-                  <image>
-                     <Image url="@../images/Screenshot%202025-09-30%20122235.png" />
-                  </image>
-               </ImageView>
-            </children>
-         </HBox>
         </VBox>
     </children>
 </AnchorPane>
