@@ -24,6 +24,7 @@ import java.util.Optional;
 public class FoodPageController {
 
     public Button btnBack;
+    public TableColumn<?, ?> colUnitBuyingPrice;
     @FXML
     private Button btnClearFood;
 
@@ -82,6 +83,8 @@ public class FoodPageController {
         colQty.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         colUnitPrice.setCellValueFactory(new PropertyValueFactory<>("unitPrice"));
         colTotalPrice.setCellValueFactory(new PropertyValueFactory<>("totalPrice"));
+        colUnitBuyingPrice.setCellValueFactory(new PropertyValueFactory<>("unitBuyingPrice"));
+
     }
 
     private void loadAllFoods() {
@@ -89,17 +92,48 @@ public class FoodPageController {
         List<FoodDto> dtoList = foodBO.getAllFoods();
 
         for (FoodDto dto : dtoList) {
+            double qty = Double.parseDouble(dto.getQuantity());
+            double total = Double.parseDouble(dto.getTotalPrice());
+            double unitBuyingPrice = qty != 0 ? total / qty : 0.0;
             obList.add(new FoodTM(
                     dto.getFoodId(),
                     dto.getName(),
                     dto.getQuantity(),
                     dto.getUnitPrice(),
-                    dto.getTotalPrice()
+                    dto.getTotalPrice(),
+                    String.format("%.2f", unitBuyingPrice)
             ));
         }
         tblFood.setItems(obList);
     }
+    private boolean isInputValid() {
+        if (txtName.getText().isEmpty() ||
+                txtQuantity.getText().isEmpty() ||
+                txtUnitPrice.getText().isEmpty() ||
+                txtTotalPrice.getText().isEmpty()) {
+            showAlert(Alert.AlertType.WARNING, "Please fill in all fields.");
+            return false;
+        }
 
+        if (!txtName.getText().matches("[A-Za-z ]+")) {
+            showAlert(Alert.AlertType.WARNING, "Name must contain only letters and spaces!");
+            return false;
+        }
+        if (!txtQuantity.getText().matches("\\d+(\\.\\d{1,2})?")) {
+            showAlert(Alert.AlertType.WARNING, "Quantity must be a valid number (up to 2 decimals)!");
+            return false;
+        }
+        if (!txtUnitPrice.getText().matches("\\d+(\\.\\d{1,2})?")) {
+            showAlert(Alert.AlertType.WARNING, "Unit Price must be a valid number (up to 2 decimals)!");
+            return false;
+        }
+        if (!txtTotalPrice.getText().matches("\\d+(\\.\\d{1,2})?")) {
+            showAlert(Alert.AlertType.WARNING, "Total Price must be a valid number (up to 2 decimals)!");
+            return false;
+        }
+
+        return true;
+    }
     @FXML
      void clickOnAction(MouseEvent event) {
         FoodTM selected = tblFood.getSelectionModel().getSelectedItem();
@@ -116,11 +150,15 @@ public class FoodPageController {
     @FXML
     void btnSaveFoodOnAction(ActionEvent event) {
         if (isInputValid()) {
+            double qty = Double.parseDouble(txtQuantity.getText());
+            double total = Double.parseDouble(txtTotalPrice.getText());
+            double unitBuyingPrice = qty != 0 ? total / qty : 0.0;
             FoodDto dto = new FoodDto(
                     txtName.getText(),
                     txtQuantity.getText(),
                     txtUnitPrice.getText(),
-                    txtTotalPrice.getText()
+                    txtTotalPrice.getText(),
+                    String.format("%.2f", unitBuyingPrice)
             );
 
             boolean isSaved = foodBO.saveFood(dto);
@@ -138,13 +176,16 @@ public class FoodPageController {
     void btnUpdateFoodOnAction(ActionEvent event) {
         if (isInputValid()) {
             long id = Long.parseLong(txtFoodId.getText());
-
+            double qty = Double.parseDouble(txtQuantity.getText());
+            double total = Double.parseDouble(txtTotalPrice.getText());
+            double unitBuyingPrice = qty != 0 ? total / qty : 0.0;
             FoodDto dto = new FoodDto(
                         id,
                     txtName.getText(),
                     txtQuantity.getText(),
                     txtUnitPrice.getText(),
-                    txtTotalPrice.getText()
+                    txtTotalPrice.getText(),
+                    String.format("%.2f", unitBuyingPrice)
             );
 
             boolean isUpdated = foodBO.updateFood(dto);
@@ -194,16 +235,6 @@ public class FoodPageController {
         tblFood.getSelectionModel().clearSelection();
     }
 
-    private boolean isInputValid() {
-        if (txtName.getText().isEmpty() ||
-                txtQuantity.getText().isEmpty() ||
-                txtUnitPrice.getText().isEmpty() ||
-                txtTotalPrice.getText().isEmpty()) {
-            showAlert(Alert.AlertType.WARNING, "Please fill in all fields.");
-            return false;
-        }
-        return true;
-    }
 
     private void showAlert(Alert.AlertType type, String message) {
         new Alert(type, message).show();

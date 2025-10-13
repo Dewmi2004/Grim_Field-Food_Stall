@@ -17,6 +17,7 @@ import lk.ijse.grim_fieldfood_stall.bo.custom.OrderBo;
 import lk.ijse.grim_fieldfood_stall.dto.FoodDto;
 import lk.ijse.grim_fieldfood_stall.entity.OrderFood;
 import lk.ijse.grim_fieldfood_stall.model.ProfitTm;
+import lombok.Getter;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -55,10 +56,11 @@ public class ProfitPageController {
     @FXML
     private TextField txtTotalProfit;
 
-  
-
     private final FoodBO foodBO = (FoodBO) BOFactory.getInstance().getBO(BOFactory.BOtypes.FOOD);
     private final OrderBo orderBO = (OrderBo) BOFactory.getInstance().getBO(BOFactory.BOtypes.ORDER);
+
+    @Getter
+    private static String totalProfitValue = "0.00";
 
     public void initialize() {
         setCellValueFactories();
@@ -74,6 +76,7 @@ public class ProfitPageController {
         colTotalPrice.setCellValueFactory(new PropertyValueFactory<>("totalPrice"));
         colProfit.setCellValueFactory(new PropertyValueFactory<>("profit"));
     }
+
     private void loadProfitTable() {
         ObservableList<ProfitTm> obList = FXCollections.observableArrayList();
         double totalProfit = 0;
@@ -86,9 +89,7 @@ public class ProfitPageController {
 
             for (OrderFood of : orderFoodList) {
                 int foodId = Math.toIntExact(of.getFood().getFoodId());
-
                 int orderQty = Integer.parseInt(of.getOrderQuantity());
-
                 int currentQty = totalOrderQtyMap.getOrDefault(foodId, 0);
                 totalOrderQtyMap.put(foodId, currentQty + orderQty);
             }
@@ -96,13 +97,10 @@ public class ProfitPageController {
             for (FoodDto food : allFoods) {
                 int id = Math.toIntExact(food.getFoodId());
                 String name = food.getName();
-                double unitSellingPrice = Double.parseDouble(food.getUnitPrice());
-                double totalBuyingPrice = Double.parseDouble(food.getTotalPrice());
-                int qty = Integer.parseInt(food.getQuantity());
-
+                double unitSellingPrice = safeParseDouble(food.getUnitPrice());
+                double buyingPerUnit = safeParseDouble(food.getUnitBuyingPrice());
                 int totalOrderedQty = totalOrderQtyMap.getOrDefault(id, 0);
 
-                double buyingPerUnit = totalBuyingPrice / qty;
                 double profit = (unitSellingPrice - buyingPerUnit) * totalOrderedQty;
 
                 obList.add(new ProfitTm(
@@ -110,14 +108,17 @@ public class ProfitPageController {
                         name,
                         totalOrderedQty,
                         unitSellingPrice,
-                        totalBuyingPrice,
+                        buyingPerUnit,
                         profit
                 ));
+
                 totalProfit += profit;
             }
 
             tblFood.setItems(obList);
             txtTotalProfit.setText(String.format("%.2f", totalProfit));
+
+            totalProfitValue = txtTotalProfit.getText();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -125,6 +126,14 @@ public class ProfitPageController {
         }
     }
 
+    private double safeParseDouble(String value) {
+        if (value == null || value.trim().isEmpty()) return 0.0;
+        try {
+            return Double.parseDouble(value.trim());
+        } catch (NumberFormatException e) {
+            return 0.0;
+        }
+    }
 
     private void setCurrentDate() {
         txtDate.setText(LocalDate.now().toString());
@@ -140,6 +149,4 @@ public class ProfitPageController {
         stage.setTitle("Dashboard");
         stage.show();
     }
-
-
 }

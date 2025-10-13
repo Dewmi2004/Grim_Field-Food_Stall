@@ -27,21 +27,28 @@ public class Food {
     private String unitPrice;
     @Column(nullable = false)
     private String totalPrice;
+    @Column(nullable = false)
+    private String unitBuyingPrice;
 
-    @OneToMany(mappedBy = "food")
-    private List<OrderFood> orderFoods;
-    public Food(String name, String quantity, String unitPrice, String totalPrice) {
-        this.name = name;
-        this.quantity = quantity;
-        this.unitPrice = unitPrice;
-        this.totalPrice = totalPrice;
-    }
-
-    public Food(long foodId, String name, String quantity, String unitPrice, String totalPrice) {
+    public Food(long foodId, String name, String quantity, String unitPrice, String totalPrice, String unitBuyingPrice) {
         this.foodId = foodId;
         this.name = name;
         this.quantity = quantity;
         this.unitPrice = unitPrice;
         this.totalPrice = totalPrice;
+        this.unitBuyingPrice = unitBuyingPrice;
     }
+
+    public Food(String name, String quantity, String unitPrice, String totalPrice, String unitBuyingPrice) {
+        this.name = name;
+        this.quantity = quantity;
+        this.unitPrice = unitPrice;
+        this.totalPrice = totalPrice;
+        this.unitBuyingPrice = unitBuyingPrice;
+    }
+
+    @OneToMany(mappedBy = "food")
+    private List<OrderFood> orderFoods;
+
+
 }

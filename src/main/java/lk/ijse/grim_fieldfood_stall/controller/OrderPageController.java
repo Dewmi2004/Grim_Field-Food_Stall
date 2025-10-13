@@ -116,10 +116,13 @@ public class OrderPageController implements Initializable {
             String itemName = cmbItemId.getValue();
             Food entity = foodBO.findByName(itemName);
             if (entity == null) return;
+            String qtyText = txtQuantity.getText().trim();
+            if (!qtyText.matches("\\d+")) {
+                new Alert(Alert.AlertType.WARNING, "Quantity must be a valid number!").show();
+                return;
+            }
             int available = Integer.parseInt(entity.getQuantity());
-//            int currentQty = Integer.parseInt(entity.getQuantity());
             int qty = Integer.parseInt(txtQuantity.getText());
-//            int available =(currentQty-=qty);
 
             if (available <= 0) {
                 new Alert(Alert.AlertType.WARNING, "No quantity left for this item!").show();
@@ -129,7 +132,14 @@ public class OrderPageController implements Initializable {
                 new Alert(Alert.AlertType.WARNING, "Requested quantity exceeds available!").show();
                 return;
             }
-
+            for (CartTm tm : cartList) {
+                if (String.valueOf(tm.getFoodId()).equals(String.valueOf(entity.getFoodId()))) {
+                    new Alert(Alert.AlertType.WARNING,
+                            "This item is already in the cart! Please remove it first if you want to change quantity.")
+                            .show();
+                    return;
+                }
+            }
             double unitPrice = Double.parseDouble(entity.getUnitPrice());
             double total = qty * unitPrice;
 
@@ -159,6 +169,12 @@ public class OrderPageController implements Initializable {
 
     @FXML
     void btnCheckBalanceOnAction(ActionEvent event) {
+        String paidText = txtPaidAmount.getText().trim();
+        if (!paidText.matches("\\d+(\\.\\d{1,2})?")) {
+            new Alert(Alert.AlertType.WARNING, "Paid amount must be a valid number (up to 2 decimals)!").show();
+            return;
+        }
+
         double paid = Double.parseDouble(txtPaidAmount.getText());
         double total = Double.parseDouble(lblTotalAmount.getText());
         double change = paid - total;
