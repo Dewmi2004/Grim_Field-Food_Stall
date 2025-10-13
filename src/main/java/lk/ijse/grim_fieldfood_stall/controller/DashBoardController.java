@@ -38,7 +38,8 @@ private final OrderBo orderBO = (OrderBo) BOFactory.getInstance().getBO(BOFactor
     private Label lblTotalOrders;
 
     @FXML
-    private Label lblTotalProfit;
+    private  Label lblTotalProfit;
+
 
     @FXML
     void handleManageFoods(ActionEvent event) {
@@ -77,12 +78,17 @@ nevigateTo("/lk/ijse/grim_fieldfood_stall/assests/Profit.fxml");
         ArrayList<OrderDto> allOrders = (ArrayList<OrderDto>) orderBO.getAllOrders();
         lblTotalOrders.setText(String.valueOf(allOrders.size()));
     }
+    public void setProfit() {
+        lblTotalProfit.setText(ProfitPageController.getTotalProfitValue());
+    }
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
             setFood();
             setOrders();
+            setProfit();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

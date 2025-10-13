@@ -13,12 +13,12 @@ public class FoodBOImpl implements FoodBO {
 
     @Override
     public boolean saveFood(FoodDto dto) {
-        return foodDAO.save(new Food( dto.getName(), dto.getQuantity(), dto.getUnitPrice(), dto.getTotalPrice()));
+        return foodDAO.save(new Food( dto.getName(), dto.getQuantity(), dto.getUnitPrice(), dto.getTotalPrice(),dto.getUnitBuyingPrice()));
     }
 
     @Override
     public boolean updateFood(FoodDto dto) {
-        return foodDAO.update(new Food(dto.getFoodId(), dto.getName(), dto.getQuantity(), dto.getUnitPrice(), dto.getTotalPrice()));
+        return foodDAO.update(new Food(dto.getFoodId(), dto.getName(), dto.getQuantity(), dto.getUnitPrice(), dto.getTotalPrice(), dto.getUnitBuyingPrice()));
     }
 
     @Override
@@ -29,14 +29,14 @@ public class FoodBOImpl implements FoodBO {
     @Override
     public FoodDto getFood(String id) {
         Food f = foodDAO.get(id);
-        return f != null ? new FoodDto(f.getFoodId(), f.getName(), f.getQuantity(), f.getUnitPrice(), f.getTotalPrice()) : null;
+        return f != null ? new FoodDto(f.getFoodId(), f.getName(), f.getQuantity(), f.getUnitPrice(), f.getTotalPrice(),f.getUnitBuyingPrice()) : null;
     }
 
     @Override
     public List<FoodDto> getAllFoods() {
         List<FoodDto> list = new ArrayList<>();
         for (Food f : foodDAO.getAll()) {
-            list.add(new FoodDto(f.getFoodId(), f.getName(), f.getQuantity(), f.getUnitPrice(), f.getTotalPrice()));
+            list.add(new FoodDto(f.getFoodId(), f.getName(), f.getQuantity(), f.getUnitPrice(), f.getTotalPrice(),f.getUnitBuyingPrice()));
         }
         return list;
     }

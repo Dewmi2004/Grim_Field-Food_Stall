@@ -38,11 +38,11 @@ public class OrderBoImpl implements OrderBo {
             orderFood.setOrderQuantity(item.getQuantity());
             orderFoodDao.save(orderFood);
 
-//            int available = Integer.parseInt(foodEntity.getQuantity());
-//            int ordered = Integer.parseInt(item.getQuantity());
-//            foodEntity.setQuantity(String.valueOf(available - ordered));
-//
-//            foodDao.update(foodEntity);
+            int available = Integer.parseInt(foodEntity.getQuantity());
+            int ordered = Integer.parseInt(item.getQuantity());
+            foodEntity.setQuantity(String.valueOf(available - ordered));
+
+            foodDao.update(foodEntity);
         }
 
         return true;

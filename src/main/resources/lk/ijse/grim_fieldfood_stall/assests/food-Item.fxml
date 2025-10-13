@@ -30,7 +30,7 @@
 
                 <children>
                     <Label opacity="0.6" prefHeight="30.0" prefWidth="227.0" style="-fx-text-fill: #ffffff; -fx-font-size: 20px; -fx-font-weight: bold;" text="Food ID" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                    <TextField fx:id="txtFoodId" prefHeight="43.0" prefWidth="345.0" style="-fx-background-color: #000000; -fx-text-fill: #ffffff; -fx-border-color: #ff4500; -fx-border-width: 2.5; -fx-padding: 5 10 5 10; -fx-background-radius: 5;" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                    <TextField fx:id="txtFoodId" prefHeight="43.0" prefWidth="345.0" style="-fx-background-color: #000000; -fx-text-fill: #ffffff; -fx-border-color: #ff4500; -fx-border-width: 2.5; -fx-padding: 5 10 5 10; -fx-background-radius: 5;" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="0">
                         <font>
                             <Font size="20.0" />
                         </font></TextField>
@@ -120,6 +120,7 @@
                     <TableColumn fx:id="colQty" text="Quantity" />
                     <TableColumn fx:id="colUnitPrice" text="Unit Price" />
                     <TableColumn fx:id="colTotalPrice" text="Total Buying Price" />
+                    <TableColumn fx:id="colUnitBuyingPrice" text="Unit Buying Price" />
                 </columns>
                 <columnResizePolicy>
                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
