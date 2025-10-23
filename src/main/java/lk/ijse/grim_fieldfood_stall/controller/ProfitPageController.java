@@ -8,44 +8,34 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-import lk.ijse.grim_fieldfood_stall.bo.BOFactory;
-import lk.ijse.grim_fieldfood_stall.bo.custom.FoodBO;
-import lk.ijse.grim_fieldfood_stall.bo.custom.OrderBo;
-import lk.ijse.grim_fieldfood_stall.dto.FoodDto;
+import lk.ijse.grim_fieldfood_stall.config.FactoryConfiguration;
+import lk.ijse.grim_fieldfood_stall.entity.OrderEntity;
 import lk.ijse.grim_fieldfood_stall.entity.OrderFood;
 import lk.ijse.grim_fieldfood_stall.model.ProfitTm;
-import lombok.Getter;
+import org.hibernate.Session;
+import org.hibernate.query.Query;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Objects;
 
 public class ProfitPageController {
 
     @FXML
-    public TextField txtDate;
-    @FXML
     private Button btnBack;
 
     @FXML
-    private TableColumn<ProfitTm, String> colFoodId;
+    private TableColumn<ProfitTm, Long> colOrderId;
 
     @FXML
-    private TableColumn<ProfitTm, String> colName;
-
-    @FXML
-    private TableColumn<ProfitTm, Integer> colQty;
-
-    @FXML
-    private TableColumn<ProfitTm, Double> colUnitPrice;
-
-    @FXML
-    private TableColumn<ProfitTm, Double> colTotalPrice;
+    private TableColumn<ProfitTm, Integer> colQuantity;
 
     @FXML
     private TableColumn<ProfitTm, Double> colProfit;
@@ -54,95 +44,60 @@ public class ProfitPageController {
     private TableView<ProfitTm> tblFood;
 
     @FXML
+    private TextField txtDate;
+
+    @FXML
     private TextField txtTotalProfit;
 
-    private final FoodBO foodBO = (FoodBO) BOFactory.getInstance().getBO(BOFactory.BOtypes.FOOD);
-    private final OrderBo orderBO = (OrderBo) BOFactory.getInstance().getBO(BOFactory.BOtypes.ORDER);
+    private final ObservableList<ProfitTm> profitList = FXCollections.observableArrayList();
+    private static double totalProfitValue = 0.0;
 
-    @Getter
-    private static String totalProfitValue = "0.00";
-
+    @FXML
     public void initialize() {
-        setCellValueFactories();
-        loadProfitTable();
-        setCurrentDate();
-    }
-
-    private void setCellValueFactories() {
-        colFoodId.setCellValueFactory(new PropertyValueFactory<>("foodId"));
-        colName.setCellValueFactory(new PropertyValueFactory<>("name"));
-        colQty.setCellValueFactory(new PropertyValueFactory<>("qty"));
-        colUnitPrice.setCellValueFactory(new PropertyValueFactory<>("unitPrice"));
-        colTotalPrice.setCellValueFactory(new PropertyValueFactory<>("totalPrice"));
+        txtDate.setText(LocalDate.now().toString());
+        colOrderId.setCellValueFactory(new PropertyValueFactory<>("orderId"));
+        colQuantity.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         colProfit.setCellValueFactory(new PropertyValueFactory<>("profit"));
+
+        loadProfitData();
     }
 
-    private void loadProfitTable() {
-        ObservableList<ProfitTm> obList = FXCollections.observableArrayList();
-        double totalProfit = 0;
+    private void loadProfitData() {
+        try (Session session = FactoryConfiguration.getInstance().getSession()) {
+            Query<OrderEntity> query = session.createQuery("FROM OrderEntity", OrderEntity.class);
+            List<OrderEntity> orderList = query.list();
 
-        try {
-            List<FoodDto> allFoods = foodBO.getAllFoods();
-            List<OrderFood> orderFoodList = orderBO.getAllOrderFoods();
+            profitList.clear();
+            totalProfitValue = 0.0;
 
-            Map<Integer, Integer> totalOrderQtyMap = new HashMap<>();
+            for (OrderEntity order : orderList) {
+                int totalQuantity = 0;
 
-            for (OrderFood of : orderFoodList) {
-                int foodId = Math.toIntExact(of.getFood().getFoodId());
-                int orderQty = Integer.parseInt(of.getOrderQuantity());
-                int currentQty = totalOrderQtyMap.getOrDefault(foodId, 0);
-                totalOrderQtyMap.put(foodId, currentQty + orderQty);
+                for (OrderFood of : order.getOrderFoods()) {
+                    totalQuantity += Integer.parseInt(of.getOrderQuantity());
+                }
+
+                double profit = Double.parseDouble(order.getTotalAmount());
+                totalProfitValue += profit;
+
+                profitList.add(new ProfitTm(order.getOrderId(), totalQuantity, profit));
             }
 
-            for (FoodDto food : allFoods) {
-                int id = Math.toIntExact(food.getFoodId());
-                String name = food.getName();
-                double unitSellingPrice = safeParseDouble(food.getUnitPrice());
-                double buyingPerUnit = safeParseDouble(food.getUnitBuyingPrice());
-                int totalOrderedQty = totalOrderQtyMap.getOrDefault(id, 0);
-
-                double profit = (unitSellingPrice - buyingPerUnit) * totalOrderedQty;
-
-                obList.add(new ProfitTm(
-                        String.valueOf(id),
-                        name,
-                        totalOrderedQty,
-                        unitSellingPrice,
-                        buyingPerUnit,
-                        profit
-                ));
-
-                totalProfit += profit;
-            }
-
-            tblFood.setItems(obList);
-            txtTotalProfit.setText(String.format("%.2f", totalProfit));
-
-            totalProfitValue = txtTotalProfit.getText();
+            tblFood.setItems(profitList);
+            txtTotalProfit.setText(String.format("%.2f", totalProfitValue));
 
         } catch (Exception e) {
             e.printStackTrace();
-            new Alert(Alert.AlertType.ERROR, "Failed to load profit data!").show();
         }
     }
 
-    private double safeParseDouble(String value) {
-        if (value == null || value.trim().isEmpty()) return 0.0;
-        try {
-            return Double.parseDouble(value.trim());
-        } catch (NumberFormatException e) {
-            return 0.0;
-        }
-    }
-
-    private void setCurrentDate() {
-        txtDate.setText(LocalDate.now().toString());
+    public static String getTotalProfitValue() {
+        return String.format("%.2f", totalProfitValue);
     }
 
     @FXML
     void btnBackOnAction(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/lk/ijse/grim_fieldfood_stall/assests/DashBoard.fxml"));
-        Parent root = loader.load();
+        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/lk/ijse/grim_fieldfood_stall/assests/DashBoard.fxml")));
         Stage stage = ((Stage) ((Node) event.getSource()).getScene().getWindow());
         stage.setScene(new Scene(root));
         stage.centerOnScreen();

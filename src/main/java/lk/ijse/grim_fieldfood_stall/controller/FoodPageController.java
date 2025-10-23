@@ -23,55 +23,30 @@ import java.util.Optional;
 
 public class FoodPageController {
 
-    public Button btnBack;
-    public TableColumn<?, ?> colUnitBuyingPrice;
     @FXML
-    private Button btnClearFood;
+    private Button btnBack, btnClearFood, btnDeleteFood, btnSaveFood, btnUpdateFood;
 
     @FXML
-    private Button btnDeleteFood;
+    private TableColumn<FoodTM, Long> colFoodId;
 
     @FXML
-    private Button btnSaveFood;
+    private TableColumn<FoodTM, String> colName;
 
     @FXML
-    private Button btnUpdateFood;
+    private TableColumn<FoodTM, String> colQty;
 
     @FXML
-    private TableColumn<?, ?> colFoodId;
-
-    @FXML
-    private TableColumn<?, ?> colName;
-
-    @FXML
-    private TableColumn<?, ?> colQty;
-
-    @FXML
-    private TableColumn<?, ?> colTotalPrice;
-
-    @FXML
-    private TableColumn<?, ?> colUnitPrice;
+    private TableColumn<FoodTM, String> colUnitPrice;
 
     @FXML
     private TableView<FoodTM> tblFood;
 
     @FXML
-    private TextField txtFoodId;
-
-    @FXML
-    private TextField txtName;
-
-    @FXML
-    private TextField txtQuantity;
-
-    @FXML
-    private TextField txtTotalPrice;
-
-    @FXML
-    private TextField txtUnitPrice;
+    private TextField txtFoodId, txtName, txtQuantity, txtUnitPrice;
 
     private final FoodBO foodBO = (FoodBO) BOFactory.getInstance().getBO(BOFactory.BOtypes.FOOD);
 
+    @FXML
     public void initialize() {
         setCellValueFactory();
         loadAllFoods();
@@ -82,9 +57,6 @@ public class FoodPageController {
         colName.setCellValueFactory(new PropertyValueFactory<>("name"));
         colQty.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         colUnitPrice.setCellValueFactory(new PropertyValueFactory<>("unitPrice"));
-        colTotalPrice.setCellValueFactory(new PropertyValueFactory<>("totalPrice"));
-        colUnitBuyingPrice.setCellValueFactory(new PropertyValueFactory<>("unitBuyingPrice"));
-
     }
 
     private void loadAllFoods() {
@@ -92,25 +64,13 @@ public class FoodPageController {
         List<FoodDto> dtoList = foodBO.getAllFoods();
 
         for (FoodDto dto : dtoList) {
-            double qty = Double.parseDouble(dto.getQuantity());
-            double total = Double.parseDouble(dto.getTotalPrice());
-            double unitBuyingPrice = qty != 0 ? total / qty : 0.0;
-            obList.add(new FoodTM(
-                    dto.getFoodId(),
-                    dto.getName(),
-                    dto.getQuantity(),
-                    dto.getUnitPrice(),
-                    dto.getTotalPrice(),
-                    String.format("%.2f", unitBuyingPrice)
-            ));
+            obList.add(new FoodTM(dto.getFoodId(), dto.getName(), dto.getQuantity(), dto.getUnitPrice()));
         }
         tblFood.setItems(obList);
     }
+
     private boolean isInputValid() {
-        if (txtName.getText().isEmpty() ||
-                txtQuantity.getText().isEmpty() ||
-                txtUnitPrice.getText().isEmpty() ||
-                txtTotalPrice.getText().isEmpty()) {
+        if (txtName.getText().isEmpty() || txtQuantity.getText().isEmpty() || txtUnitPrice.getText().isEmpty()) {
             showAlert(Alert.AlertType.WARNING, "Please fill in all fields.");
             return false;
         }
@@ -127,40 +87,24 @@ public class FoodPageController {
             showAlert(Alert.AlertType.WARNING, "Unit Price must be a valid number (up to 2 decimals)!");
             return false;
         }
-        if (!txtTotalPrice.getText().matches("\\d+(\\.\\d{1,2})?")) {
-            showAlert(Alert.AlertType.WARNING, "Total Price must be a valid number (up to 2 decimals)!");
-            return false;
-        }
-
         return true;
     }
+
     @FXML
-     void clickOnAction(MouseEvent event) {
+    void clickOnAction(MouseEvent event) {
         FoodTM selected = tblFood.getSelectionModel().getSelectedItem();
         if (selected != null) {
             txtFoodId.setText(String.valueOf(selected.getFoodId()));
             txtName.setText(selected.getName());
             txtQuantity.setText(selected.getQuantity());
             txtUnitPrice.setText(selected.getUnitPrice());
-            txtTotalPrice.setText(selected.getTotalPrice());
-
         }
     }
 
     @FXML
     void btnSaveFoodOnAction(ActionEvent event) {
         if (isInputValid()) {
-            double qty = Double.parseDouble(txtQuantity.getText());
-            double total = Double.parseDouble(txtTotalPrice.getText());
-            double unitBuyingPrice = qty != 0 ? total / qty : 0.0;
-            FoodDto dto = new FoodDto(
-                    txtName.getText(),
-                    txtQuantity.getText(),
-                    txtUnitPrice.getText(),
-                    txtTotalPrice.getText(),
-                    String.format("%.2f", unitBuyingPrice)
-            );
-
+            FoodDto dto = new FoodDto(txtName.getText(), txtQuantity.getText(), txtUnitPrice.getText());
             boolean isSaved = foodBO.saveFood(dto);
             if (isSaved) {
                 showAlert(Alert.AlertType.INFORMATION, "Food saved successfully!");
@@ -176,18 +120,7 @@ public class FoodPageController {
     void btnUpdateFoodOnAction(ActionEvent event) {
         if (isInputValid()) {
             long id = Long.parseLong(txtFoodId.getText());
-            double qty = Double.parseDouble(txtQuantity.getText());
-            double total = Double.parseDouble(txtTotalPrice.getText());
-            double unitBuyingPrice = qty != 0 ? total / qty : 0.0;
-            FoodDto dto = new FoodDto(
-                        id,
-                    txtName.getText(),
-                    txtQuantity.getText(),
-                    txtUnitPrice.getText(),
-                    txtTotalPrice.getText(),
-                    String.format("%.2f", unitBuyingPrice)
-            );
-
+            FoodDto dto = new FoodDto(id, txtName.getText(), txtQuantity.getText(), txtUnitPrice.getText());
             boolean isUpdated = foodBO.updateFood(dto);
             if (isUpdated) {
                 showAlert(Alert.AlertType.INFORMATION, "Food updated successfully!");
@@ -202,7 +135,6 @@ public class FoodPageController {
     @FXML
     void btnDeleteFoodOnAction(ActionEvent event) {
         String id = txtFoodId.getText();
-
         if (id.isEmpty()) {
             showAlert(Alert.AlertType.WARNING, "Please enter a Food ID to delete.");
             return;
@@ -231,10 +163,8 @@ public class FoodPageController {
         txtName.clear();
         txtQuantity.clear();
         txtUnitPrice.clear();
-        txtTotalPrice.clear();
         tblFood.getSelectionModel().clearSelection();
     }
-
 
     private void showAlert(Alert.AlertType type, String message) {
         new Alert(type, message).show();
@@ -245,12 +175,11 @@ public class FoodPageController {
         return alert.showAndWait();
     }
 
+    @FXML
     public void btnBackOnAction(ActionEvent actionEvent) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/lk/ijse/grim_fieldfood_stall/assests/DashBoard.fxml"));
         Parent root = loader.load();
-
-        Stage stage = ((Stage)((Node)actionEvent.getSource()).getScene().getWindow());
-
+        Stage stage = ((Stage) ((Node) actionEvent.getSource()).getScene().getWindow());
         stage.setScene(new Scene(root));
         stage.centerOnScreen();
         stage.setTitle("Dashboard");

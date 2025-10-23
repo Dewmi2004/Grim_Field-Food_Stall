@@ -12,14 +12,12 @@ public class FoodDto {
     private String name;
     private String quantity;
     private String unitPrice;
-    private String totalPrice;
-    private String unitBuyingPrice;
 
-    public FoodDto(String name, String quantity, String unitPrice, String totalPrice, String unitBuyingPrice) {
+
+    public FoodDto(String name, String quantity, String unitPrice) {
         this.name = name;
         this.quantity = quantity;
         this.unitPrice = unitPrice;
-        this.totalPrice = totalPrice;
-        this.unitBuyingPrice = unitBuyingPrice;
+
     }
 }

@@ -8,10 +8,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProfitTm {
-    private String foodId;
-    private String name;
-    private int qty;
-    private double unitPrice;
-    private double totalPrice;
+    private long orderId;
+    private int quantity;
     private double profit;
+
+
 }
