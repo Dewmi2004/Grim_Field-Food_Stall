@@ -5,20 +5,21 @@ import lk.ijse.grim_fieldfood_stall.dao.DaoFactory;
 import lk.ijse.grim_fieldfood_stall.dao.custom.FoodDao;
 import lk.ijse.grim_fieldfood_stall.dto.FoodDto;
 import lk.ijse.grim_fieldfood_stall.entity.Food;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class FoodBOImpl implements FoodBO {
-    FoodDao foodDAO = (FoodDao) DaoFactory.getInstance().getDAO(DaoFactory.DAOtypes.FOOD);
+    private final FoodDao foodDAO = (FoodDao) DaoFactory.getInstance().getDAO(DaoFactory.DAOtypes.FOOD);
 
     @Override
     public boolean saveFood(FoodDto dto) {
-        return foodDAO.save(new Food( dto.getName(), dto.getQuantity(), dto.getUnitPrice(), dto.getTotalPrice(),dto.getUnitBuyingPrice()));
+        return foodDAO.save(new Food(dto.getName(), dto.getQuantity(), dto.getUnitPrice()));
     }
 
     @Override
     public boolean updateFood(FoodDto dto) {
-        return foodDAO.update(new Food(dto.getFoodId(), dto.getName(), dto.getQuantity(), dto.getUnitPrice(), dto.getTotalPrice(), dto.getUnitBuyingPrice()));
+        return foodDAO.update(new Food(dto.getFoodId(), dto.getName(), dto.getQuantity(), dto.getUnitPrice()));
     }
 
     @Override
@@ -29,14 +30,14 @@ public class FoodBOImpl implements FoodBO {
     @Override
     public FoodDto getFood(String id) {
         Food f = foodDAO.get(id);
-        return f != null ? new FoodDto(f.getFoodId(), f.getName(), f.getQuantity(), f.getUnitPrice(), f.getTotalPrice(),f.getUnitBuyingPrice()) : null;
+        return f != null ? new FoodDto(f.getFoodId(), f.getName(), f.getQuantity(), f.getUnitPrice()) : null;
     }
 
     @Override
     public List<FoodDto> getAllFoods() {
         List<FoodDto> list = new ArrayList<>();
         for (Food f : foodDAO.getAll()) {
-            list.add(new FoodDto(f.getFoodId(), f.getName(), f.getQuantity(), f.getUnitPrice(), f.getTotalPrice(),f.getUnitBuyingPrice()));
+            list.add(new FoodDto(f.getFoodId(), f.getName(), f.getQuantity(), f.getUnitPrice()));
         }
         return list;
     }
@@ -45,6 +46,4 @@ public class FoodBOImpl implements FoodBO {
     public Food findByName(String itemName) {
         return foodDAO.findByName(itemName);
     }
-
-
 }

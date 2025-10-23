@@ -19,7 +19,7 @@
         <VBox alignment="TOP_CENTER" prefHeight="624.0" prefWidth="860.0" spacing="20.0" style="-fx-background-color: linear-gradient(to bottom, #000000,#D2691E); -fx-background-radius: 25 25 60 60; -fx-border-color: #ff4500; -fx-border-width: 5; -fx-padding: 25; -fx-effect: dropshadow(gaussian, #000000, 15, 0.7, 3, 3);" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
 
             <!-- Title -->
-            <Label opacity="0.8" style="-fx-font-size: 70px; -fx-text-fill: #ff4500; -fx-font-family: 'Chiller'; -fx-effect: dropshadow(gaussian, #ffffff, 8, 0.5, 3, 3);" text="🎃 Coffin Feast - Food Items 👻" />
+            <Label opacity="0.8" style="-fx-font-size: 70px; -fx-text-fill: #ff4500; -fx-font-family: 'Chiller'; -fx-effect: dropshadow(gaussian, #ffffff, 8, 0.5, 3, 3);" text="🎃 Grim Theater  - Food Items 👻" />
 
             <!-- Dashboard Cards -->
             <GridPane alignment="CENTER" hgap="25.0" vgap="25.0">

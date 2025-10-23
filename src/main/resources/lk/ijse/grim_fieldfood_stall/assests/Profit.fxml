@@ -19,7 +19,7 @@
         <VBox alignment="TOP_CENTER" prefHeight="700.0" prefWidth="860.0" spacing="15.0" style="-fx-background-color:linear-gradient(to bottom, #000000, #D2691E); -fx-background-radius: 25 25 60 60; -fx-border-color: #ff4500; -fx-border-width: 5; -fx-padding: 20; -fx-effect: dropshadow(gaussian, #000000, 15, 0.7, 3, 3);" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="15.0">
 
             <!-- Title -->
-            <Label opacity="0.8" style="-fx-font-size: 70px; -fx-text-fill: #ff4500; -fx-font-family: 'Chiller'; -fx-effect: dropshadow(gaussian, #ffffff, 8, 0.5, 3, 3);" text="🎃 Coffin Feast - Profit 👻" />
+            <Label opacity="0.8" style="-fx-font-size: 70px; -fx-text-fill: #ff4500; -fx-font-family: 'Chiller'; -fx-effect: dropshadow(gaussian, #ffffff, 8, 0.5, 3, 3);" text="🎃 Grim Theater  - Profit 👻" />
 
             <!-- Input Fields in Grid -->
             <GridPane hgap="15.0" vgap="12.0">
@@ -65,11 +65,8 @@
 
             <TableView fx:id="tblFood" opacity="0.8" prefHeight="300.0" prefWidth="820.0" style="-fx-background-color: #D2691E; -fx-border-width: 1; -fx-selection-bar: #ff4500; -fx-selection-bar-non-focused: #ff4500; -fx-background-radius: 20; -fx-border-color: #ff4500;" VBox.vgrow="ALWAYS">
                 <columns>
-                    <TableColumn fx:id="colFoodId" text="Food ID" />
-                    <TableColumn fx:id="colName" text="Name" />
-                    <TableColumn fx:id="colQty" text="Selling Quantity" />
-                    <TableColumn fx:id="colUnitPrice" text="Unit Price" />
-                    <TableColumn fx:id="colTotalPrice" text="Total Buying Price" />
+                    <TableColumn fx:id="colOrderId" text="Order Id" />
+                    <TableColumn fx:id="colQuantity" text="quantity" />
                <TableColumn fx:id="colProfit" prefWidth="75.0" text="Profit" />
                 </columns>
             <columnResizePolicy>

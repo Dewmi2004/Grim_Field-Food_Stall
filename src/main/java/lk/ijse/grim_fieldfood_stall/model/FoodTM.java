@@ -15,6 +15,5 @@ public class FoodTM {
     private String name;
     private String quantity;
     private String unitPrice;
-    private String totalPrice;
-    private String unitBuyingPrice;
+
 }

@@ -10,11 +10,10 @@ import org.hibernate.query.Query;
 import java.util.List;
 
 public class FoodDaoImpl implements FoodDao {
-    private final FactoryConfiguration factoryConfiguration = FactoryConfiguration.getInstance();
 
     @Override
     public boolean save(Food entity) {
-        Session session = factoryConfiguration.getSession();
+        Session session = FactoryConfiguration.getInstance().getSession();
         Transaction tx = session.beginTransaction();
         session.persist(entity);
         tx.commit();
@@ -24,7 +23,7 @@ public class FoodDaoImpl implements FoodDao {
 
     @Override
     public boolean update(Food entity) {
-        Session session = factoryConfiguration.getSession();
+        Session session = FactoryConfiguration.getInstance().getSession();
         Transaction tx = session.beginTransaction();
         session.merge(entity);
         tx.commit();
@@ -34,9 +33,9 @@ public class FoodDaoImpl implements FoodDao {
 
     @Override
     public boolean delete(String id) {
-        Session session = factoryConfiguration.getSession();
+        Session session = FactoryConfiguration.getInstance().getSession();
         Transaction tx = session.beginTransaction();
-        Food food = session.get(Food.class, id);
+        Food food = session.get(Food.class, Long.parseLong(id));
         if (food != null) session.remove(food);
         tx.commit();
         session.close();
@@ -45,16 +44,16 @@ public class FoodDaoImpl implements FoodDao {
 
     @Override
     public Food get(String id) {
-        Session session = factoryConfiguration.getSession();
-        Food food = session.get(Food.class, id);
+        Session session = FactoryConfiguration.getInstance().getSession();
+        Food food = session.get(Food.class, Long.parseLong(id));
         session.close();
         return food;
     }
 
     @Override
     public List<Food> getAll() {
-        Session session = factoryConfiguration.getSession();
-        List<Food> list = session.createQuery("from Food", Food.class).list();
+        Session session = FactoryConfiguration.getInstance().getSession();
+        List<Food> list = session.createQuery("FROM Food", Food.class).list();
         session.close();
         return list;
     }
@@ -70,9 +69,10 @@ public class FoodDaoImpl implements FoodDao {
     }
 
     @Override
-    public Food findById(long id) throws Exception {
-        try (Session session = FactoryConfiguration.getInstance().getSession()) {
-            return session.get(Food.class, id);
-        }
+    public Food findById(long id) {
+        Session session = FactoryConfiguration.getInstance().getSession();
+        Food food = session.get(Food.class, id);
+        session.close();
+        return food;
     }
 }

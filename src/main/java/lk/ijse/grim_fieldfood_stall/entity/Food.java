@@ -25,26 +25,21 @@ public class Food {
     private String quantity;
     @Column(nullable = false)
     private String unitPrice;
-    @Column(nullable = false)
-    private String totalPrice;
-    @Column(nullable = false)
-    private String unitBuyingPrice;
 
-    public Food(long foodId, String name, String quantity, String unitPrice, String totalPrice, String unitBuyingPrice) {
+
+    public Food(long foodId, String name, String quantity, String unitPrice) {
         this.foodId = foodId;
         this.name = name;
         this.quantity = quantity;
         this.unitPrice = unitPrice;
-        this.totalPrice = totalPrice;
-        this.unitBuyingPrice = unitBuyingPrice;
+
     }
 
-    public Food(String name, String quantity, String unitPrice, String totalPrice, String unitBuyingPrice) {
+    public Food(String name, String quantity, String unitPrice) {
         this.name = name;
         this.quantity = quantity;
         this.unitPrice = unitPrice;
-        this.totalPrice = totalPrice;
-        this.unitBuyingPrice = unitBuyingPrice;
+
     }
 
     @OneToMany(mappedBy = "food")
