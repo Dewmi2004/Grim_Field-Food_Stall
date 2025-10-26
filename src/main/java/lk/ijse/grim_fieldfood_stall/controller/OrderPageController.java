@@ -31,6 +31,7 @@ import java.util.*;
 public class OrderPageController implements Initializable {
 
     public ImageView imgDrink, imgCorn, imgChips;
+    public Label lblPriceAll;
 
     @FXML
     private Label lblOrderId, lblTotalAmount, lblChange, lblPriceChips, lblQtyChips,
@@ -66,15 +67,14 @@ public class OrderPageController implements Initializable {
 
         rootVBox.sceneProperty().addListener((obs, oldScene, newScene) -> {
             if (newScene != null) {
-                newScene.setOnKeyPressed(this::rootOnKeyPressed);
+                newScene.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+                    if (event.getCode() == KeyCode.ENTER) {
+                        btnPlaceOrderOnAction(new ActionEvent());
+                        event.consume();
+                    }
+                });
             }
         });
-    }
-
-    private void rootOnKeyPressed(KeyEvent event) {
-        if (event.getCode() == KeyCode.ENTER) {
-            btnPlaceOrderOnAction(null);
-        }
     }
 
     private void setTableColumns() {
@@ -95,7 +95,7 @@ public class OrderPageController implements Initializable {
             }
 
             if (foodMap.containsKey("chips")) lblPriceChips.setText(foodMap.get("chips").getUnitPrice());
-            if (foodMap.containsKey("cola")) lblPriceDrink.setText(foodMap.get("cola").getUnitPrice());
+            if (foodMap.containsKey("drink")) lblPriceDrink.setText(foodMap.get("drink").getUnitPrice());
             if (foodMap.containsKey("pop corn")) lblPriceCorn.setText(foodMap.get("pop corn").getUnitPrice());
         } catch (Exception e) {
             e.printStackTrace();
@@ -110,10 +110,19 @@ public class OrderPageController implements Initializable {
         }
 
         int available = Integer.parseInt(food.getQuantity());
-        if (qty <= 0 || qty > available) {
-            new Alert(Alert.AlertType.WARNING, "Invalid quantity for " + food.getName()).show();
+        if (qty <= 0) {
+            new Alert(Alert.AlertType.WARNING, "Quantity must be greater than 0!").show();
             return;
         }
+
+        if (available < qty) {
+            new Alert(Alert.AlertType.WARNING,
+                    "Not enough stock for " + food.getName() + ". Available: " + available).show();
+            return;
+        }
+
+        // Reduce local stock immediately (simulate reserve)
+        food.setQuantity(String.valueOf(available - qty));
 
         double unitPrice = Double.parseDouble(food.getUnitPrice());
         double total = qty * unitPrice;
@@ -137,6 +146,9 @@ public class OrderPageController implements Initializable {
 
         btnRemove.setOnAction(e -> {
             cartList.remove(tm);
+            // Restore stock if item removed
+            int current = Integer.parseInt(food.getQuantity());
+            food.setQuantity(String.valueOf(current + qty));
             calculateTotal();
         });
 
@@ -159,44 +171,71 @@ public class OrderPageController implements Initializable {
         label.setText(String.valueOf(newQty));
     }
 
-    @FXML
-    void btnMinusChipsOnAction(ActionEvent event) { adjustQty(lblQtyChips, -1); }
-    @FXML
-    void btnPlusChipsOnAction(ActionEvent event) { adjustQty(lblQtyChips, +1); }
-    @FXML
-    void btnMinusDrinkOnAction(ActionEvent event) { adjustQty(lblQtyDrink, -1); }
-    @FXML
-    void btnPlusDrinkOnAction(ActionEvent event) { adjustQty(lblQtyDrink, +1); }
-    @FXML
-    void btnMinusCornOnAction(ActionEvent event) { adjustQty(lblQtyCorn, -1); }
-    @FXML
-    void btnPlusCornOnAction(ActionEvent event) { adjustQty(lblQtyCorn, +1); }
-    @FXML
-    void btnMinusAllOnAction(ActionEvent event) { adjustQty(lblQtyAll, -1); }
-    @FXML
-    void btnPlusAllOnAction(ActionEvent event) { adjustQty(lblQtyAll, +1); }
+    @FXML void btnMinusChipsOnAction(ActionEvent e) { adjustQty(lblQtyChips, -1); }
+    @FXML void btnPlusChipsOnAction(ActionEvent e) { adjustQty(lblQtyChips, +1); }
+    @FXML void btnMinusDrinkOnAction(ActionEvent e) { adjustQty(lblQtyDrink, -1); }
+    @FXML void btnPlusDrinkOnAction(ActionEvent e) { adjustQty(lblQtyDrink, +1); }
+    @FXML void btnMinusCornOnAction(ActionEvent e) { adjustQty(lblQtyCorn, -1); }
+    @FXML void btnPlusCornOnAction(ActionEvent e) { adjustQty(lblQtyCorn, +1); }
+    @FXML void btnMinusAllOnAction(ActionEvent e) { adjustQty(lblQtyAll, -1); }
+    @FXML void btnPlusAllOnAction(ActionEvent e) { adjustQty(lblQtyAll, +1); }
+
+    @FXML void btnAddChipsOnAction(ActionEvent e) {
+        addToCart(foodMap.get("chips"), Integer.parseInt(lblQtyChips.getText()));
+        lblQtyChips.setText("0");
+    }
+    @FXML void btnAddDrinkOnAction(ActionEvent e) {
+        addToCart(foodMap.get("drink"), Integer.parseInt(lblQtyDrink.getText()));
+        lblQtyDrink.setText("0");
+    }
+    @FXML void btnAddCornOnAction(ActionEvent e) {
+        addToCart(foodMap.get("pop corn"), Integer.parseInt(lblQtyCorn.getText()));
+        lblQtyCorn.setText("0");
+    }
 
     @FXML
-    void btnAddChipsOnAction(ActionEvent event) { addToCart(foodMap.get("chips"), Integer.parseInt(lblQtyChips.getText())); }
-    @FXML
-    void btnAddDrinkOnAction(ActionEvent event) { addToCart(foodMap.get("cola"), Integer.parseInt(lblQtyDrink.getText())); }
-    @FXML
-    void btnAddCornOnAction(ActionEvent event) { addToCart(foodMap.get("pop corn"), Integer.parseInt(lblQtyCorn.getText())); }
-
-    @FXML
-    void btnAddAllOnAction(ActionEvent event) {
+    void btnAddAllOnAction(ActionEvent e) {
         int packageQty = Integer.parseInt(lblQtyAll.getText());
         if (packageQty <= 0) {
             new Alert(Alert.AlertType.WARNING, "Package quantity must be at least 1!").show();
             return;
         }
 
+        FoodDto chips = foodMap.get("chips");
+        FoodDto drink = foodMap.get("drink");
+        FoodDto corn = foodMap.get("pop corn");
+
+        if (chips == null || drink == null || corn == null) {
+            new Alert(Alert.AlertType.ERROR, "One or more package items not found!").show();
+            return;
+        }
+
+        int chipsQty = Integer.parseInt(chips.getQuantity());
+        int drinkQty = Integer.parseInt(drink.getQuantity());
+        int cornQty = Integer.parseInt(corn.getQuantity());
+
+        // ✅ Disallow if any item hit 0 or insufficient for package
+        if (chipsQty < packageQty || drinkQty < packageQty || cornQty < packageQty) {
+            new Alert(Alert.AlertType.WARNING,
+                    "Cannot add package — not enough stock!\n" +
+                            "Available - Chips: " + chipsQty +
+                            ", Drink: " + drinkQty +
+                            ", Pop Corn: " + cornQty
+            ).show();
+            return;
+        }
+
+        // ✅ Reserve stock (decrease locally)
+        chips.setQuantity(String.valueOf(chipsQty - packageQty));
+        drink.setQuantity(String.valueOf(drinkQty - packageQty));
+        corn.setQuantity(String.valueOf(cornQty - packageQty));
+
+        // ✅ Remove existing package if already added
         cartList.removeIf(tm -> tm.getName().equalsIgnoreCase("Package"));
 
-        double chipsPrice = Double.parseDouble(foodMap.get("chips").getUnitPrice());
-        double drinkPrice = Double.parseDouble(foodMap.get("cola").getUnitPrice()) - 50; // discount
-        if (drinkPrice < 0) drinkPrice = 0;
-        double cornPrice = Double.parseDouble(foodMap.get("pop corn").getUnitPrice());
+        double chipsPrice = Double.parseDouble(chips.getUnitPrice());
+        double drinkPrice = Math.max(Double.parseDouble(drink.getUnitPrice()) - 50, 0);
+        double cornPrice = Double.parseDouble(corn.getUnitPrice());
 
         double packagePricePerUnit = chipsPrice + drinkPrice + cornPrice;
         double total = packageQty * packagePricePerUnit;
@@ -211,8 +250,12 @@ public class OrderPageController implements Initializable {
                 btnRemove
         );
 
-        btnRemove.setOnAction(e -> {
+        btnRemove.setOnAction(ev -> {
             cartList.remove(packageItem);
+            // Restore stock for removed package
+            chips.setQuantity(String.valueOf(Integer.parseInt(chips.getQuantity()) + packageQty));
+            drink.setQuantity(String.valueOf(Integer.parseInt(drink.getQuantity()) + packageQty));
+            corn.setQuantity(String.valueOf(Integer.parseInt(corn.getQuantity()) + packageQty));
             tblCart.refresh();
             calculateTotal();
         });
@@ -220,10 +263,11 @@ public class OrderPageController implements Initializable {
         cartList.add(packageItem);
         tblCart.refresh();
         calculateTotal();
+        lblQtyAll.setText("0");
     }
 
     @FXML
-    void btnCheckBalanceOnAction(ActionEvent event) {
+    void btnCheckBalanceOnAction(ActionEvent e) {
         String paidText = txtPaidAmount.getText().trim();
         if (!paidText.matches("\\d+(\\.\\d{1,2})?")) {
             new Alert(Alert.AlertType.WARNING, "Paid amount must be a valid number!").show();
@@ -237,7 +281,7 @@ public class OrderPageController implements Initializable {
     }
 
     @FXML
-    void btnPlaceOrderOnAction(ActionEvent event) {
+    void btnPlaceOrderOnAction(ActionEvent e) {
         if (cartList.isEmpty()) {
             new Alert(Alert.AlertType.WARNING, "Cart is empty!").show();
             return;
@@ -245,15 +289,6 @@ public class OrderPageController implements Initializable {
 
         try {
             ObservableList<CartTm> items = FXCollections.observableArrayList(cartList);
-
-            for (CartTm tm : items) {
-                if (!tm.getName().equalsIgnoreCase("Package")) {
-                    FoodDto food = foodMap.values().stream().filter(f -> f.getFoodId() == tm.getFoodId()).findFirst().orElse(null);
-                    if (food != null) {
-                        food.setQuantity(String.valueOf(Integer.parseInt(food.getQuantity()) - Integer.parseInt(tm.getQuantity())));
-                    }
-                }
-            }
 
             OrderDto orderDto = new OrderDto(
                     txtDate.getText(),
@@ -263,14 +298,14 @@ public class OrderPageController implements Initializable {
 
             boolean success = orderBo.placeOrder(orderDto);
             if (success) {
-                new Alert(Alert.AlertType.INFORMATION, "🎃 Order placed successfully! 👻").show();
+                new Alert(Alert.AlertType.INFORMATION, "🎉 Order placed successfully!").show();
                 clearAll();
                 lblOrderId.setText("(Auto-generated)");
             } else {
                 new Alert(Alert.AlertType.ERROR, "Failed to place order!").show();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ex) {
+            ex.printStackTrace();
             new Alert(Alert.AlertType.ERROR, "Error placing order!").show();
         }
     }
@@ -288,9 +323,9 @@ public class OrderPageController implements Initializable {
     }
 
     @FXML
-    void btnBackOnAction(ActionEvent event) throws IOException {
+    void btnBackOnAction(ActionEvent e) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/lk/ijse/grim_fieldfood_stall/assests/DashBoard.fxml"));
-        Stage stage = ((Stage) ((Node) event.getSource()).getScene().getWindow());
+        Stage stage = ((Stage) ((Node) e.getSource()).getScene().getWindow());
         stage.setScene(new Scene(root));
         stage.centerOnScreen();
         stage.setTitle("Dashboard");

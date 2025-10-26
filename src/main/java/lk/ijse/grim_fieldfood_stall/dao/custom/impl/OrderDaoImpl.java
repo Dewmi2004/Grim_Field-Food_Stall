@@ -33,4 +33,12 @@ public class OrderDaoImpl implements OrderDao {
         session.close();
         return list;
     }
+    @Override
+    public Long getLastOrderId() {
+        try (Session session = FactoryConfiguration.getInstance().getSession()) {
+            return session.createQuery("SELECT MAX(o.orderId) FROM OrderEntity o", Long.class)
+                    .getSingleResult();
+        }
+    }
+
 }

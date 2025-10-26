@@ -22,7 +22,7 @@
             </padding>
 
             <!-- 🎃 Title -->
-            <Label opacity="0.8" style="-fx-font-size: 70px; -fx-text-fill: #ff4500; -fx-font-family: 'Chiller'; -fx-effect: dropshadow(gaussian, #ffffff, 8, 0.5, 3, 3);" text="🎃 Grim Theater - Food Items 👻" />
+            <Label opacity="0.8" style="-fx-font-size: 70px; -fx-text-fill: #ff4500; -fx-font-family: 'Chiller'; -fx-effect: dropshadow(gaussian, #ffffff, 8, 0.5, 3, 3);" text="🎃 Grim Theater - Place Order 👻" />
 
             <!-- 🧾 Order Info -->
             <VBox spacing="8.0">
@@ -95,7 +95,7 @@
                         </image>
                     </ImageView>
                     <Label style="-fx-text-fill: white; -fx-font-size: 20px; -fx-font-weight: bold;" text="Package" />
-                    <Label fx:id="lblPriceAll" style="-fx-text-fill: #ffae42; -fx-font-size: 18px;" text="100.00" />
+                    <Label fx:id="lblPriceAll" style="-fx-text-fill: #ffae42; -fx-font-size: 18px;" text="400.00" />
                     <HBox alignment="CENTER" spacing="10">
                         <Button onAction="#btnMinusAllOnAction" style="-fx-background-color: #ff4500; -fx-text-fill: white; -fx-font-weight: bold;" text="-" />
                         <Label fx:id="lblQtyAll" style="-fx-text-fill: white; -fx-font-size: 18px;" text="0" />

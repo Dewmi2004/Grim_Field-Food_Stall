@@ -50,6 +50,8 @@ public class FoodPageController {
     public void initialize() {
         setCellValueFactory();
         loadAllFoods();
+        btnDeleteFood.setDisable(true);
+        btnUpdateFood.setDisable(true);
     }
 
     private void setCellValueFactory() {
@@ -98,6 +100,10 @@ public class FoodPageController {
             txtName.setText(selected.getName());
             txtQuantity.setText(selected.getQuantity());
             txtUnitPrice.setText(selected.getUnitPrice());
+            btnSaveFood.setDisable(true);
+            btnDeleteFood.setDisable(false);
+            btnUpdateFood.setDisable(false);
+
         }
     }
 
