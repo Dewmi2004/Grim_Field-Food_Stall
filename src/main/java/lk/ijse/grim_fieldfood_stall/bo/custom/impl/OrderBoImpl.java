@@ -29,9 +29,8 @@ public class OrderBoImpl implements OrderBo {
 
         for (CartTm item : dto.getCartList()) {
             if (item.getName().equalsIgnoreCase("Package")) {
-                // Package contains Chips + Drink + Corn
                 Food chips = foodDao.findByName("chips");
-                Food drink = foodDao.findByName("cola");
+                Food drink = foodDao.findByName("drink");
                 Food corn = foodDao.findByName("pop corn");
 
                 if (chips != null && drink != null && corn != null) {
@@ -64,7 +63,11 @@ public class OrderBoImpl implements OrderBo {
 
     private void reduceStock(Food food, int orderedQty) throws Exception {
         int available = Integer.parseInt(food.getQuantity());
-        food.setQuantity(String.valueOf(available - orderedQty));
+        int newQty = available - orderedQty;
+        if (newQty < 0) {
+            newQty = 0;
+        }
+        food.setQuantity(String.valueOf(newQty));
         foodDao.update(food);
     }
 
@@ -88,12 +91,12 @@ public class OrderBoImpl implements OrderBo {
         Map<String, Integer> packageCount = new HashMap<>();
         for (CartTm tm : cartList) {
             if (tm.getName().equalsIgnoreCase("chips") ||
-                    tm.getName().equalsIgnoreCase("cola") ||
+                    tm.getName().equalsIgnoreCase("drink") ||
                     tm.getName().equalsIgnoreCase("pop corn")) {
 
                 String key = "Package";
                 int count = packageCount.getOrDefault(key, 0);
-                count = Math.min(count, Integer.parseInt(tm.getQuantity())); // safe
+                count = Math.min(count, Integer.parseInt(tm.getQuantity()));
                 packageCount.put(key, count + Integer.parseInt(tm.getQuantity()));
             }
         }
@@ -117,4 +120,9 @@ public class OrderBoImpl implements OrderBo {
     public List<OrderFood> getAllOrderFoods() {
         return orderFoodDao.getAll();
     }
+    @Override
+    public Long getLastOrderId() throws Exception {
+        return orderDao.getLastOrderId();
+    }
+
 }

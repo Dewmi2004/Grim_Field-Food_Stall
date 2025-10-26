@@ -9,4 +9,6 @@ public interface OrderDao extends SuperDao {
     boolean save(OrderEntity entity) throws Exception;
 
     List<OrderEntity> getAll();
+
+    Long getLastOrderId();
 }

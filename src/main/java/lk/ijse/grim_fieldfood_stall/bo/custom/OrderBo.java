@@ -13,4 +13,6 @@ public interface OrderBo extends SuperBO {
     Object getAllOrders();
 
     List<OrderFood> getAllOrderFoods();
+
+    Long getLastOrderId() throws Exception;
 }

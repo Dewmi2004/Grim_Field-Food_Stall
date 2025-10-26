@@ -80,12 +80,11 @@ public class DashBoardController implements Initializable {
     }
 
     private void setOrderCount() throws Exception {
-        ArrayList<OrderDto> allOrders = (ArrayList<OrderDto>) orderBO.getAllOrders();
-        lblTotalOrders.setText(String.valueOf(allOrders.size()));
+        Long lastOrderId = orderBO.getLastOrderId();
+        lblTotalOrders.setText(String.valueOf(lastOrderId));
     }
 
     private void setProfit() {
-        // Retrieve profit value from ProfitPageController
         lblTotalProfit.setText(ProfitPageController.getTotalProfitValue());
     }
 
