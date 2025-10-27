@@ -11,6 +11,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="888.0" prefWidth="1072.0" style="-fx-background-color:linear-gradient(to bottom, #000000, #D2691E);" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.grim_fieldfood_stall.controller.OrderPageController">
 
@@ -35,7 +36,7 @@
             </VBox>
 
             <!-- 🍔 Item Selection -->
-            <HBox alignment="CENTER" prefHeight="296.0" prefWidth="1004.0" spacing="40">
+            <HBox alignment="CENTER" prefHeight="280.0" prefWidth="1035.0" spacing="40">
 
                 <!-- 🥯 chips -->
                 <VBox alignment="CENTER" spacing="5">
@@ -47,11 +48,16 @@
                     <Label style="-fx-text-fill: white; -fx-font-size: 20px; -fx-font-weight: bold;" text="Chips" />
                     <Label fx:id="lblPriceChips" style="-fx-text-fill: #ffae42; -fx-font-size: 18px;" text="100.00" />
                     <HBox alignment="CENTER" spacing="10">
-                        <Button onAction="#btnMinusChipsOnAction" style="-fx-background-color: #ff4500; -fx-text-fill: white; -fx-font-weight: bold;" text="-" />
+                        <Button onAction="#btnMinusChipsOnAction" style="-fx-background-color: linear-gradient(to bottom, #3C3C3C,  #ff4500); -fx-text-fill: white; -fx-font-weight: bold;" text="-">
+                     <font>
+                        <Font size="20.0" />
+                     </font></Button>
                         <Label fx:id="lblQtyChips" style="-fx-text-fill: white; -fx-font-size: 18px;" text="0" />
-                        <Button onAction="#btnPlusChipsOnAction" style="-fx-background-color: #ff4500; -fx-text-fill: white; -fx-font-weight: bold;" text="+" />
+                        <Button onAction="#btnPlusChipsOnAction" style="-fx-background-color: linear-gradient(to bottom, #3C3C3C,  #ff4500); -fx-text-fill: white; -fx-font-weight: bold;" text="+">
+                     <font>
+                        <Font size="20.0" />
+                     </font></Button>
                     </HBox>
-                    <Button onAction="#btnAddChipsOnAction" style="-fx-background-color: #ff4500; -fx-text-fill: white; -fx-font-weight: bold;" text="Add to Cart" />
                 </VBox>
 
                 <!-- 🧃 Drink -->
@@ -64,11 +70,16 @@
                     <Label style="-fx-text-fill: white; -fx-font-size: 20px; -fx-font-weight: bold;" text="Drink" />
                     <Label fx:id="lblPriceDrink" style="-fx-text-fill: #ffae42; -fx-font-size: 18px;" text="150.00" />
                     <HBox alignment="CENTER" spacing="10">
-                        <Button onAction="#btnMinusDrinkOnAction" style="-fx-background-color: #ff4500; -fx-text-fill: white; -fx-font-weight: bold;" text="-" />
+                        <Button onAction="#btnMinusDrinkOnAction" style="-fx-background-color: linear-gradient(to bottom, #3C3C3C,  #ff4500); -fx-text-fill: white; -fx-font-weight: bold;" text="-">
+                     <font>
+                        <Font size="20.0" />
+                     </font></Button>
                         <Label fx:id="lblQtyDrink" style="-fx-text-fill: white; -fx-font-size: 18px;" text="0" />
-                        <Button onAction="#btnPlusDrinkOnAction" style="-fx-background-color: #ff4500; -fx-text-fill: white; -fx-font-weight: bold;" text="+" />
+                        <Button onAction="#btnPlusDrinkOnAction" style="-fx-background-color: linear-gradient(to bottom, #3C3C3C,  #ff4500); -fx-text-fill: white; -fx-font-weight: bold;" text="+">
+                     <font>
+                        <Font size="20.0" />
+                     </font></Button>
                     </HBox>
-                    <Button onAction="#btnAddDrinkOnAction" style="-fx-background-color: #ff4500; -fx-text-fill: white; -fx-font-weight: bold;" text="Add to Cart" />
                 </VBox>
 
                 <!-- 🌽 Corn -->
@@ -81,11 +92,16 @@
                     <Label style="-fx-text-fill: white; -fx-font-size: 20px; -fx-font-weight: bold;" text="Corn" />
                     <Label fx:id="lblPriceCorn" style="-fx-text-fill: #ffae42; -fx-font-size: 18px;" text="120.00" />
                     <HBox alignment="CENTER" spacing="10">
-                        <Button onAction="#btnMinusCornOnAction" style="-fx-background-color: #ff4500; -fx-text-fill: white; -fx-font-weight: bold;" text="-" />
+                        <Button onAction="#btnMinusCornOnAction" style="-fx-background-color: linear-gradient(to bottom, #3C3C3C,  #ff4500); -fx-text-fill: white; -fx-font-weight: bold;" text="-">
+                     <font>
+                        <Font size="20.0" />
+                     </font></Button>
                         <Label fx:id="lblQtyCorn" style="-fx-text-fill: white; -fx-font-size: 18px;" text="0" />
-                        <Button onAction="#btnPlusCornOnAction" style="-fx-background-color: #ff4500; -fx-text-fill: white; -fx-font-weight: bold;" text="+" />
+                        <Button onAction="#btnPlusCornOnAction" style="-fx-background-color: linear-gradient(to bottom, #3C3C3C,  #ff4500); -fx-text-fill: white; -fx-font-weight: bold;" text="+">
+                     <font>
+                        <Font size="20.0" />
+                     </font></Button>
                     </HBox>
-                    <Button onAction="#btnAddCornOnAction" style="-fx-background-color: #ff4500; -fx-text-fill: white; -fx-font-weight: bold;" text="Add to Cart" />
                 </VBox>
                 <!--   All-->
                 <VBox alignment="CENTER" spacing="5">
@@ -97,16 +113,55 @@
                     <Label style="-fx-text-fill: white; -fx-font-size: 20px; -fx-font-weight: bold;" text="Package" />
                     <Label fx:id="lblPriceAll" style="-fx-text-fill: #ffae42; -fx-font-size: 18px;" text="400.00" />
                     <HBox alignment="CENTER" spacing="10">
-                        <Button onAction="#btnMinusAllOnAction" style="-fx-background-color: #ff4500; -fx-text-fill: white; -fx-font-weight: bold;" text="-" />
+                        <Button onAction="#btnMinusAllOnAction" style="-fx-background-color: linear-gradient(to bottom, #3C3C3C,  #ff4500); -fx-text-fill: white; -fx-font-weight: bold;" text="-">
+                     <font>
+                        <Font size="20.0" />
+                     </font></Button>
                         <Label fx:id="lblQtyAll" style="-fx-text-fill: white; -fx-font-size: 18px;" text="0" />
-                        <Button onAction="#btnPlusAllOnAction" style="-fx-background-color: #ff4500; -fx-text-fill: white; -fx-font-weight: bold;" text="+" />
+                        <Button onAction="#btnPlusAllOnAction" style="-fx-background-color: linear-gradient(to bottom, #3C3C3C,  #ff4500); -fx-text-fill: white; -fx-font-weight: bold;" text="+">
+                     <font>
+                        <Font size="20.0" />
+                     </font></Button>
                     </HBox>
-                    <Button onAction="#btnAddAllOnAction" style="-fx-background-color: #ff4500; -fx-text-fill: white; -fx-font-weight: bold;" text="Add to Cart" />
                 </VBox>
+   
+                  <!-- 💵 Payment Section -->
+               <VBox prefHeight="280.0" prefWidth="238.0" spacing="10.0" style="-fx-background-color:linear-gradient(to bottom, #3C3C3C, #D2691E); -fx-background-radius: 25 25 60 60; -fx-border-width: 2; -fx-padding: 20; -fx-effect: dropshadow(gaussian, #000000, 15, 0.7, 3, 3);">
+   
+                   <Label style="-fx-font-size: 25px; -fx-text-fill: #FFFFFF; -fx-font-family: 'Kablammo'; -fx-effect: dropshadow(gaussian, #000000, 5, 0.8, 2, 2);" text="💀 Payment Info" />
+   
+                   <HBox spacing="10.0">
+                       <Label style="-fx-text-fill: #FFFFFF; -fx-font-size: 25px; -fx-font-weight: bold;" text="Total:" />
+                       <Label fx:id="lblTotalAmount" style="-fx-text-fill: #FFFFFF; -fx-font-size: 25px; -fx-font-weight: bold;" text="0.00" />
+                   </HBox>
+   
+                   <HBox spacing="10.0">
+                       <Label prefHeight="30.0" prefWidth="83.0" style="-fx-text-fill: #FFFFFF; -fx-font-size: 12px; -fx-font-weight: bold;" text="Paid Amount:" />
+                       <TextField fx:id="txtPaidAmount" prefHeight="30.0" prefWidth="113.0" style="-fx-background-color: #000000; -fx-text-fill: #FFFFFF; -fx-border-color: #ff4500; -fx-border-width: 1.5; -fx-padding: 5 10 5 10; -fx-background-radius: 5;" />
+                   </HBox>
+               <HBox prefHeight="50.0" prefWidth="202.0">
+                  <children>
+                          <Button fx:id="btnCheckBalance" onAction="#btnCheckBalanceOnAction" prefHeight="38.0" prefWidth="151.0" style="-fx-background-color: #ff4500; -fx-text-fill: #FFFFFF; -fx-font-weight: bold; -fx-padding: 10 20; -fx-background-radius: 8;" text="Check" />
+                  </children>
+               </HBox>
+               <HBox prefHeight="100.0" prefWidth="200.0">
+                  <children>
+                          <Label prefHeight="32.0" prefWidth="101.0" style="-fx-text-fill: #FFFFFF; -fx-font-size: 22px; -fx-font-weight: bold;" text="Change:" />
+                          <Label fx:id="lblChange" prefHeight="32.0" prefWidth="102.0" style="-fx-text-fill: #FFFFFF; -fx-font-size: 22px; -fx-font-weight: bold;" text="0.00" />
+                  </children>
+               </HBox>
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+               </VBox>
             </HBox>
+              <Button onAction="#btnAddToCartOnAction" prefHeight="39.0" prefWidth="174.0" style="-fx-background-color: linear-gradient(to bottom, #3C3C3C,  #ff4500); -fx-text-fill: white; -fx-font-weight: bold;" text="Add to Cart">
+            <font>
+               <Font size="25.0" />
+            </font></Button>
 
             <!-- 🛒 Cart Table -->
-            <TableView fx:id="tblCart" prefHeight="400.0" prefWidth="934.0" style="-fx-background-color: #D2691E; -fx-border-width: 3; -fx-selection-bar: #D2691E; -fx-background-radius: 20; -fx-border-color: #ff4500;">
+            <TableView fx:id="tblCart" style="-fx-background-color: #D2691E; -fx-border-width: 3; -fx-selection-bar: #D2691E; -fx-background-radius: 20; -fx-border-color: #ff4500;">
                 <columns>
                     <TableColumn fx:id="colItemId" text="Item ID" />
                     <TableColumn fx:id="colName" text="Name" />
@@ -119,25 +174,6 @@
                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
             </columnResizePolicy>
             </TableView>
-
-            <!-- 💵 Payment Section -->
-            <VBox spacing="10.0" style="-fx-background-color:linear-gradient(to bottom, #3C3C3C, #D2691E); -fx-background-radius: 25 25 60 60; -fx-border-width: 2; -fx-padding: 20; -fx-effect: dropshadow(gaussian, #000000, 15, 0.7, 3, 3);">
-
-                <Label style="-fx-font-size: 30px; -fx-text-fill: #FFFFFF; -fx-font-family: 'Kablammo'; -fx-effect: dropshadow(gaussian, #000000, 5, 0.8, 2, 2);" text="💀 Payment Info" />
-
-                <HBox spacing="10.0">
-                    <Label style="-fx-text-fill: #FFFFFF; -fx-font-size: 25px; -fx-font-weight: bold;" text="Total:" />
-                    <Label fx:id="lblTotalAmount" style="-fx-text-fill: #FFFFFF; -fx-font-size: 25px; -fx-font-weight: bold;" text="0.00" />
-                </HBox>
-
-                <HBox spacing="10.0">
-                    <Label style="-fx-text-fill: #FFFFFF; -fx-font-size: 22px; -fx-font-weight: bold;" text="Paid Amount:" />
-                    <TextField fx:id="txtPaidAmount" prefHeight="39.0" prefWidth="260.0" style="-fx-background-color: #000000; -fx-text-fill: #FFFFFF; -fx-border-color: #ff4500; -fx-border-width: 1.5; -fx-padding: 5 10 5 10; -fx-background-radius: 5;" />
-                    <Button fx:id="btnCheckBalance" onAction="#btnCheckBalanceOnAction" prefHeight="38.0" prefWidth="151.0" style="-fx-background-color: #ff4500; -fx-text-fill: #FFFFFF; -fx-font-weight: bold; -fx-padding: 10 20; -fx-background-radius: 8;" text="Check" />
-                    <Label style="-fx-text-fill: #FFFFFF; -fx-font-size: 22px; -fx-font-weight: bold;" text="Change:" />
-                    <Label fx:id="lblChange" style="-fx-text-fill: #FFFFFF; -fx-font-size: 22px; -fx-font-weight: bold;" text="0.00" />
-                </HBox>
-            </VBox>
 
             <!-- 🔘 Buttons -->
             <HBox alignment="CENTER" opacity="0.85" spacing="15.0">

@@ -57,6 +57,7 @@ public class OrderPageController implements Initializable {
     private final OrderBo orderBo = (OrderBo) BOFactory.getInstance().getBO(BOFactory.BOtypes.ORDER);
 
     private final Map<String, FoodDto> foodMap = new HashMap<>();
+    private String selectedItem = null;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -67,14 +68,128 @@ public class OrderPageController implements Initializable {
 
         rootVBox.sceneProperty().addListener((obs, oldScene, newScene) -> {
             if (newScene != null) {
-                newScene.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
-                    if (event.getCode() == KeyCode.ENTER) {
-                        btnPlaceOrderOnAction(new ActionEvent());
-                        event.consume();
-                    }
-                });
+                newScene.addEventFilter(KeyEvent.KEY_PRESSED, this::handleKeyPress);
             }
         });
+    }
+
+    private void handleKeyPress(KeyEvent event) {
+        switch (event.getCode()) {
+            case ENTER:
+                btnPlaceOrderOnAction(new ActionEvent());
+                event.consume();
+                break;
+            case NUMPAD1:
+                // Keypad 1 for chips - select chips
+                selectedItem = "chips";
+                highlightSelectedItem("chips");
+                event.consume();
+                break;
+            case NUMPAD2:
+                // Keypad 2 for drink - select drink
+                selectedItem = "drink";
+                highlightSelectedItem("drink");
+                event.consume();
+                break;
+            case NUMPAD3:
+                // Keypad 3 for corn - select corn
+                selectedItem = "corn";
+                highlightSelectedItem("corn");
+                event.consume();
+                break;
+            case NUMPAD4:
+                // Keypad 4 for package - select package
+                selectedItem = "package";
+                highlightSelectedItem("package");
+                event.consume();
+                break;
+            case RIGHT:
+                // Right arrow to increase quantity of selected item
+                if (selectedItem != null) {
+                    increaseSelectedItem();
+                }
+                event.consume();
+                break;
+            case LEFT:
+                // Left arrow to decrease quantity of selected item
+                if (selectedItem != null) {
+                    decreaseSelectedItem();
+                }
+                event.consume();
+                break;
+            case SHIFT:
+                // Shift key (under Enter) for add to cart
+                btnAddToCartOnAction(new ActionEvent());
+                event.consume();
+                break;
+            case BACK_SPACE:
+                // Backspace key for go back
+                try {
+                    btnBackOnAction(new ActionEvent());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                event.consume();
+                break;
+        }
+    }
+
+    private void highlightSelectedItem(String item) {
+        // Remove any existing highlights
+        imgChips.setStyle("");
+        imgDrink.setStyle("");
+        imgCorn.setStyle("");
+        lblQtyAll.setStyle("");
+
+        // Apply highlight to selected item
+        switch (item) {
+            case "chips":
+                imgChips.setStyle("-fx-effect: dropshadow(three-pass-box, #00ff00, 10, 0, 0, 0);");
+                break;
+            case "drink":
+                imgDrink.setStyle("-fx-effect: dropshadow(three-pass-box, #00ff00, 10, 0, 0, 0);");
+                break;
+            case "corn":
+                imgCorn.setStyle("-fx-effect: dropshadow(three-pass-box, #00ff00, 10, 0, 0, 0);");
+                break;
+            case "package":
+                lblQtyAll.setStyle("-fx-background-color: #00ff00; -fx-text-fill: black;");
+                break;
+        }
+    }
+
+    private void increaseSelectedItem() {
+        switch (selectedItem) {
+            case "chips":
+                adjustQty(lblQtyChips, +1);
+                break;
+            case "drink":
+                adjustQty(lblQtyDrink, +1);
+                break;
+            case "corn":
+                adjustQty(lblQtyCorn, +1);
+                break;
+            case "package":
+                adjustQty(lblQtyAll, +1);
+                break;
+        }
+    }
+
+    private void decreaseSelectedItem() {
+        switch (selectedItem) {
+            case "chips":
+                adjustQty(lblQtyChips, -1);
+                break;
+            case "drink":
+                adjustQty(lblQtyDrink, -1);
+                break;
+            case "corn":
+                adjustQty(lblQtyCorn, -1);
+                break;
+            case "package":
+                adjustQty(lblQtyAll, -1);
+                break;
+        }
     }
 
     private void setTableColumns() {
@@ -146,7 +261,6 @@ public class OrderPageController implements Initializable {
 
         btnRemove.setOnAction(e -> {
             cartList.remove(tm);
-            // Restore stock if item removed
             int current = Integer.parseInt(food.getQuantity());
             food.setQuantity(String.valueOf(current + qty));
             calculateTotal();
@@ -180,31 +294,53 @@ public class OrderPageController implements Initializable {
     @FXML void btnMinusAllOnAction(ActionEvent e) { adjustQty(lblQtyAll, -1); }
     @FXML void btnPlusAllOnAction(ActionEvent e) { adjustQty(lblQtyAll, +1); }
 
-    @FXML void btnAddChipsOnAction(ActionEvent e) {
-        addToCart(foodMap.get("chips"), Integer.parseInt(lblQtyChips.getText()));
-        lblQtyChips.setText("0");
-    }
-    @FXML void btnAddDrinkOnAction(ActionEvent e) {
-        addToCart(foodMap.get("drink"), Integer.parseInt(lblQtyDrink.getText()));
-        lblQtyDrink.setText("0");
-    }
-    @FXML void btnAddCornOnAction(ActionEvent e) {
-        addToCart(foodMap.get("pop corn"), Integer.parseInt(lblQtyCorn.getText()));
-        lblQtyCorn.setText("0");
-    }
 
     @FXML
-    void btnAddAllOnAction(ActionEvent e) {
-        int packageQty = Integer.parseInt(lblQtyAll.getText());
-        if (packageQty <= 0) {
-            new Alert(Alert.AlertType.WARNING, "Package quantity must be at least 1!").show();
-            return;
+    void btnAddToCartOnAction(ActionEvent e) {
+        try {
+            int chipsQty = Integer.parseInt(lblQtyChips.getText());
+            int drinkQty = Integer.parseInt(lblQtyDrink.getText());
+            int cornQty = Integer.parseInt(lblQtyCorn.getText());
+            int packageQty = Integer.parseInt(lblQtyAll.getText());
+
+            if (chipsQty == 0 && drinkQty == 0 && cornQty == 0 && packageQty == 0) {
+                new Alert(Alert.AlertType.WARNING, "Please select at least one quantity!").show();
+                return;
+            }
+
+            FoodDto chips = foodMap.get("chips");
+            FoodDto drink = foodMap.get("drink");
+            FoodDto corn = foodMap.get("pop corn");
+
+            if (chipsQty > 0) addToCart(chips, chipsQty);
+            if (drinkQty > 0) addToCart(drink, drinkQty);
+            if (cornQty > 0) addToCart(corn, cornQty);
+
+            if (packageQty > 0) addPackageToCart(packageQty, chips, drink, corn);
+
+            lblQtyChips.setText("0");
+            lblQtyDrink.setText("0");
+            lblQtyCorn.setText("0");
+            lblQtyAll.setText("0");
+
+            // Clear selection after adding to cart
+            clearSelection();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            new Alert(Alert.AlertType.ERROR, "Error adding items to cart!").show();
         }
+    }
 
-        FoodDto chips = foodMap.get("chips");
-        FoodDto drink = foodMap.get("drink");
-        FoodDto corn = foodMap.get("pop corn");
+    private void clearSelection() {
+        selectedItem = null;
+        imgChips.setStyle("");
+        imgDrink.setStyle("");
+        imgCorn.setStyle("");
+        lblQtyAll.setStyle("");
+    }
 
+    private void addPackageToCart(int packageQty, FoodDto chips, FoodDto drink, FoodDto corn) {
         if (chips == null || drink == null || corn == null) {
             new Alert(Alert.AlertType.ERROR, "One or more package items not found!").show();
             return;
@@ -214,23 +350,20 @@ public class OrderPageController implements Initializable {
         int drinkQty = Integer.parseInt(drink.getQuantity());
         int cornQty = Integer.parseInt(corn.getQuantity());
 
-        // ✅ Disallow if any item hit 0 or insufficient for package
         if (chipsQty < packageQty || drinkQty < packageQty || cornQty < packageQty) {
             new Alert(Alert.AlertType.WARNING,
-                    "Cannot add package — not enough stock!\n" +
-                            "Available - Chips: " + chipsQty +
+                    "Not enough stock for package!\n" +
+                            "Chips: " + chipsQty +
                             ", Drink: " + drinkQty +
                             ", Pop Corn: " + cornQty
             ).show();
             return;
         }
 
-        // ✅ Reserve stock (decrease locally)
         chips.setQuantity(String.valueOf(chipsQty - packageQty));
         drink.setQuantity(String.valueOf(drinkQty - packageQty));
         corn.setQuantity(String.valueOf(cornQty - packageQty));
 
-        // ✅ Remove existing package if already added
         cartList.removeIf(tm -> tm.getName().equalsIgnoreCase("Package"));
 
         double chipsPrice = Double.parseDouble(chips.getUnitPrice());
@@ -252,7 +385,6 @@ public class OrderPageController implements Initializable {
 
         btnRemove.setOnAction(ev -> {
             cartList.remove(packageItem);
-            // Restore stock for removed package
             chips.setQuantity(String.valueOf(Integer.parseInt(chips.getQuantity()) + packageQty));
             drink.setQuantity(String.valueOf(Integer.parseInt(drink.getQuantity()) + packageQty));
             corn.setQuantity(String.valueOf(Integer.parseInt(corn.getQuantity()) + packageQty));
@@ -263,7 +395,6 @@ public class OrderPageController implements Initializable {
         cartList.add(packageItem);
         tblCart.refresh();
         calculateTotal();
-        lblQtyAll.setText("0");
     }
 
     @FXML
@@ -320,12 +451,13 @@ public class OrderPageController implements Initializable {
         lblQtyDrink.setText("0");
         lblQtyCorn.setText("0");
         lblQtyAll.setText("0");
+        clearSelection();
     }
 
     @FXML
     void btnBackOnAction(ActionEvent e) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/lk/ijse/grim_fieldfood_stall/assests/DashBoard.fxml"));
-        Stage stage = ((Stage) ((Node) e.getSource()).getScene().getWindow());
+        Stage stage = (Stage) rootVBox.getScene().getWindow();
         stage.setScene(new Scene(root));
         stage.centerOnScreen();
         stage.setTitle("Dashboard");
